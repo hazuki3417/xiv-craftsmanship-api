@@ -1,0 +1,17 @@
+type Craft {
+  id: ID!
+  name: String!
+}
+
+type Item {
+  id: String!
+  name: String!
+  unit: Int!
+  total: Int!
+  children: [Item]
+}
+
+type Query {
+  crafts(name: String!): [Craft]
+  recipe(id: String!): [Item]
+}
