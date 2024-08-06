@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	validator "github.com/go-playground/validator/v10"
+	"github.com/hazuki3417/xiv-craftsmanship-api/internal"
 	"go.uber.org/zap"
 )
 
@@ -14,14 +15,16 @@ import (
 type Resolver struct {
 	logger    *zap.Logger
 	validator *validator.Validate
+	domain    *internal.Domain
 }
 
-func NewResolver(logger *zap.Logger, validator *validator.Validate) *Resolver {
+func NewResolver(logger *zap.Logger, validator *validator.Validate, domain *internal.Domain) *Resolver {
 	if validator == nil {
 		panic(fmt.Errorf("validator is nil"))
 	}
 	return &Resolver{
 		logger:    logger,
 		validator: validator,
+		domain:    domain,
 	}
 }

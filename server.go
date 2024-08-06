@@ -8,27 +8,23 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/hazuki3417/xiv-craftsmanship-api/graph"
 	"github.com/hazuki3417/xiv-craftsmanship-api/healthcheck"
+	"github.com/hazuki3417/xiv-craftsmanship-api/internal"
 )
 
 func main() {
 	container, close := graph.NewContainer()
 	defer close()
 
-	// init application domain
-	// domain := internal.NewDomain(
-	// 	container.Helper,
-	// 	container.Logger,
-	// 	container.Tracer,
-	// 	container.Validator,
-	// 	container.MongoDB,
-	// 	container.S3,
-	// 	utils.NowTime,
-	// )
+	domain := internal.NewDomain(
+		container.Logger,
+		container.Validator,
+	)
 
 	// init graphql
 	resolver := graph.NewResolver(
 		container.Logger,
 		container.Validator,
+		domain,
 	)
 
 	config := graph.Config{
