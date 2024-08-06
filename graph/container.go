@@ -22,7 +22,7 @@ type Container struct {
 
 // NOTE: 環境変数の構造体
 type Env struct {
-	Environment string `env:"ENV" envDefault:"develop"`
+	Environment string `env:"ENV" envDefault:"development"`
 	Port        string `env:"PORT" envDefault:"8080"`
 }
 
