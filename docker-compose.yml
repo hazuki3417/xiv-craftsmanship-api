@@ -1,0 +1,42 @@
+version: "3"
+
+services:
+  # xiv-craftsmanship-api:
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/develop/xiv-craftsmanship-api/Dockerfile
+  #   image: xiv-craftsmanship-api
+  #   hostname: xiv-craftsmanship-api
+  #   container_name: xiv-craftsmanship-api
+  #   networks:
+  #     - xiv-craftsmanship-api-network
+  #   extra_hosts:
+  #     - host.docker.internal:host-gateway
+  #   environment:
+  #     TZ: Asia/Tokyo
+  #     MONGO_INITDB_ROOT_USERNAME: develop
+  #     MONGO_INITDB_ROOT_PASSWORD: develop
+  #   ports:
+  #     - 8080:8080
+  #   profiles:
+  #     - test-image
+
+  xiv-craftsmanship-db:
+    image: xiv-craftsmanship-db
+    hostname: xiv-craftsmanship-db
+    container_name: xiv-craftsmanship-db
+    restart: always
+    environment:
+      POSTGRES_USER: example
+      POSTGRES_PASSWORD: example
+      POSTGRES_DB: example
+    ports:
+      - "5432:5432"
+    networks:
+      - xiv-craftsmanship-api-network
+    extra_hosts:
+      - host.docker.internal:host-gateway
+
+networks:
+  xiv-craftsmanship-api-network:
+    name: xiv-craftsmanship-api-network
