@@ -18,6 +18,7 @@ func main() {
 	domain := internal.NewDomain(
 		container.Logger,
 		container.Validator,
+		container.PostgreSQL,
 	)
 
 	// init graphql

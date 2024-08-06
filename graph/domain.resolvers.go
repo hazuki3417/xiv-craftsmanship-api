@@ -13,7 +13,20 @@ import (
 
 // Crafts is the resolver for the crafts field.
 func (r *queryResolver) Crafts(ctx context.Context, name string) ([]*model.Craft, error) {
-	panic(fmt.Errorf("not implemented: Crafts - crafts"))
+	crafts, err := r.domain.Domain.UseCase.GetCrafts(name)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var result []*model.Craft
+	for _, craft := range crafts {
+		result = append(result, &model.Craft{
+			ID:   craft.ID,
+			Name: craft.Name,
+		})
+	}
+	return result, nil
 }
 
 // Recipe is the resolver for the recipe field.

@@ -5,7 +5,9 @@ import (
 
 	"github.com/caarlos0/env/v6"
 	validator "github.com/go-playground/validator/v10"
+	"github.com/jmoiron/sqlx"
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )
@@ -15,27 +17,35 @@ const (
 )
 
 type Container struct {
-	Logger    *zap.Logger
-	Env       *Env
-	Validator *validator.Validate
+	Logger     *zap.Logger
+	Env        *Env
+	Validator  *validator.Validate
+	PostgreSQL *sqlx.DB
 }
 
 // NOTE: 環境変数の構造体
 type Env struct {
-	Environment string `env:"ENV" envDefault:"development"`
-	Port        string `env:"PORT" envDefault:"8080"`
+	Environment        string `env:"ENV" envDefault:"development"`
+	Port               string `env:"PORT" envDefault:"8080"`
+	PostgreSqlHost     string `env:"POSTGRE_SQL_HOST" envDefault:"localhost:5432"`
+	PostgreSqlUsername string `env:"POSTGRE_SQL_USERNAME" envDefault:"example"`
+	PostgreSqlPassword string `env:"POSTGRE_SQL_PASSWORD" envDefault:"example"`
+	PostgreSqlDb       string `env:"POSTGRE_SQL_DB" envDefault:"example"`
 }
 
 func NewContainer() (*Container, func()) {
 	logger := logger()
 	env := environment(logger)
+	postgresql, disconnect := postgresql(env, logger)
 
 	return &Container{
-			Logger:    logger,
-			Env:       env,
-			Validator: validator.New(),
+			Logger:     logger,
+			Env:        env,
+			Validator:  validator.New(),
+			PostgreSQL: postgresql,
 		}, func() { // defer func
 			defer logger.Sync()
+			defer disconnect()
 		}
 }
 
@@ -97,4 +107,28 @@ func logger() *zap.Logger {
 	}))
 
 	return zap.New(zapcore.NewTee(stdoutCore, stderrCore))
+}
+
+func postgresql(env *Env, logger *zap.Logger) (*sqlx.DB, func()) {
+	// データベースの接続文字列
+	uri := "postgresql://" +
+		env.PostgreSqlUsername +
+		":" +
+		env.PostgreSqlPassword +
+		"@" +
+		env.PostgreSqlHost +
+		"/" +
+		env.PostgreSqlDb +
+		"?sslmode=disable"
+
+	// データベースに接続
+	db, err := sqlx.Connect("postgres", uri)
+	if err != nil {
+		logger.Error(ServiceName, zap.String("message", "Failed to connect to database"), zap.Error(err))
+		os.Exit(1)
+	}
+
+	return db, func() {
+		defer db.Close()
+	}
 }
