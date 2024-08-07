@@ -12,6 +12,6 @@ type Item {
 }
 
 type Query {
-  crafts(name: String!): [Craft]
-  recipe(id: String!): [Item]
+  crafts(name: String!): [Craft!]!
+  recipe(id: String!): [Item!]!
 }
