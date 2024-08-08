@@ -18,7 +18,7 @@ func (r *queryResolver) Crafts(ctx context.Context, name string) ([]*model.Craft
 		return nil, err
 	}
 
-	var result []*model.Craft
+	result := []*model.Craft{}
 	for _, craft := range crafts {
 		result = append(result, &model.Craft{
 			ID:   craft.ID,
@@ -28,41 +28,27 @@ func (r *queryResolver) Crafts(ctx context.Context, name string) ([]*model.Craft
 	return result, nil
 }
 
-// Recipe is the resolver for the recipe field.
-func (r *queryResolver) Recipe(ctx context.Context, id string) (*model.RecipeTree, error) {
-	recipe, err := r.domain.Domain.UseCase.GetRecipe(id)
+// Materials is the resolver for the materials field.
+func (r *queryResolver) Materials(ctx context.Context, craftID string) ([]*model.Material, error) {
+	materials, err := r.domain.Domain.UseCase.GetMaterials(craftID)
 
 	if err != nil {
 		return nil, err
 	}
 
-	nodes := []*model.Node{}
-	for _, node := range recipe.Nodes {
-		nodes = append(nodes, &model.Node{
-			ID:    node.ID,
-			Name:  node.Name,
-			Unit:  node.Unit,
-			Total: node.Total,
-			Depth: &model.Depth{
-				X: node.X,
-				Y: node.Y,
-			},
-			NodeType: node.NodeType,
+	result := []*model.Material{}
+	for _, material := range materials {
+		result = append(result, &model.Material{
+			ParentID:   material.ParentItemId,
+			ChildID:    material.ChildItemId,
+			ParentName: material.ParentName,
+			ChildName:  material.ChildName,
+			Unit:       material.Unit,
+			Total:      material.Total,
 		})
 	}
 
-	edges := []*model.Edge{}
-	for _, edge := range recipe.Edges {
-		edges = append(edges, &model.Edge{
-			Source: edge.Source,
-			Target: edge.Target,
-		})
-	}
-
-	return &model.RecipeTree{
-		Nodes: nodes,
-		Edges: edges,
-	}, nil
+	return result, nil
 }
 
 // Query returns QueryResolver implementation.

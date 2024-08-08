@@ -5,22 +5,11 @@ type Craft struct {
 	Name string
 }
 
-type Recipe struct {
-	Nodes []Node
-	Edges []Edge
-}
-
-type Node struct {
-	ID       string
-	Name     string
-	Unit     int
-	Total    int
-	X        int
-	Y        int
-	NodeType string
-}
-
-type Edge struct {
-	Source string
-	Target string
+type Material struct {
+	ParentItemId string
+	ChildItemId  string
+	ParentName   string
+	ChildName    string
+	Unit         int
+	Total        int
 }

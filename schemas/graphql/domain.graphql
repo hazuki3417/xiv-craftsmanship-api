@@ -3,31 +3,16 @@ type Craft {
   name: String!
 }
 
-type RecipeTree {
-  nodes: [Node!]!
-  edges: [Edge!]!
-}
-
-type Node {
-  id: String!
-  name: String!
+type Material {
+  parentId: String!
+  childId: String!
+  parentName: String!
+  childName: String!
   unit: Int!
   total: Int!
-  depth: Depth!
-  node_type: String!
-}
-
-type Depth {
-  x: Int!
-  y: Int!
-}
-
-type Edge {
-  source: String!
-  target: String!
 }
 
 type Query {
   crafts(name: String!): [Craft!]!
-  recipe(id: String!): RecipeTree!
+  materials(craftId: String!): [Material!]!
 }

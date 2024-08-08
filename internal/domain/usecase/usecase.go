@@ -38,40 +38,23 @@ func (u *UseCase) GetCrafts(name string) ([]*payload.Craft, error) {
 	return result, nil
 }
 
-func (u *UseCase) GetRecipe(craftId string) (*payload.Recipe, error) {
-	materials, err := u.repository.GetMaterialTree(craftId)
+func (u *UseCase) GetMaterials(craftId string) ([]*payload.Material, error) {
+	materials, err := u.repository.GetMaterials(craftId)
 	if err != nil {
 		return nil, err
 	}
 
-	tmpNodes := make(map[string]*payload.Node)
-	edges := []payload.Edge{}
+	var result []*payload.Material
 	for _, material := range materials {
-		if _, exists := tmpNodes[material.ChildItemId]; !exists {
-			tmpNodes[material.ChildItemId] = &payload.Node{
-				ID:       material.ChildItemId,
-				Name:     material.ChildName,
-				Unit:     material.Unit,
-				Total:    material.Total,
-				X:        material.X,
-				Y:        material.Y,
-				NodeType: material.NodeType,
-			}
-		}
-
-		edges = append(edges, payload.Edge{
-			Source: material.ParentItemId,
-			Target: material.ChildItemId,
+		result = append(result, &payload.Material{
+			ParentItemId: material.ParentItemId,
+			ParentName:   material.ParentName,
+			ChildItemId:  material.ChildItemId,
+			ChildName:    material.ChildName,
+			Unit:         material.Unit,
+			Total:        material.Total,
 		})
 	}
 
-	nodes := []payload.Node{}
-	for _, tmpNode := range tmpNodes {
-		nodes = append(nodes, *tmpNode)
-	}
-
-	return &payload.Recipe{
-		Nodes: nodes,
-		Edges: edges,
-	}, nil
+	return result, nil
 }
