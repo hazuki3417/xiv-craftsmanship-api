@@ -43,3 +43,20 @@ func (r *Repository) GetCrafts(name string) ([]*schema.Craft, error) {
 
 	return crafts, nil
 }
+
+func (r *Repository) GetMaterialTree(craftId string) ([]*schema.MaterialTree, error) {
+	ctx := context.Background()
+	var materials []*schema.MaterialTree
+
+	query := `
+		SELECT parent_item_id, child_item_id, parent_name, child_name, unit, total, depth
+        FROM get_material_tree($1)
+	`
+
+	err := r.postgresql.SelectContext(ctx, &materials, query, craftId)
+	if err != nil {
+		return nil, err
+	}
+
+	return materials, nil
+}

@@ -7,13 +7,23 @@ type Craft struct {
 	Name string `json:"name"`
 }
 
-type Item struct {
-	ID       string  `json:"id"`
-	Name     string  `json:"name"`
-	Unit     int     `json:"unit"`
-	Total    int     `json:"total"`
-	Children []*Item `json:"children,omitempty"`
+type Edge struct {
+	Source string `json:"source"`
+	Target string `json:"target"`
+}
+
+type Node struct {
+	ID    string `json:"id"`
+	Name  string `json:"name"`
+	Unit  int    `json:"unit"`
+	Total int    `json:"total"`
+	Depth int    `json:"depth"`
 }
 
 type Query struct {
+}
+
+type RecipeTree struct {
+	Nodes []*Node `json:"nodes"`
+	Edges []*Edge `json:"edges"`
 }

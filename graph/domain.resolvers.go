@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/hazuki3417/xiv-craftsmanship-api/graph/model"
 )
@@ -30,8 +29,36 @@ func (r *queryResolver) Crafts(ctx context.Context, name string) ([]*model.Craft
 }
 
 // Recipe is the resolver for the recipe field.
-func (r *queryResolver) Recipe(ctx context.Context, id string) ([]*model.Item, error) {
-	panic(fmt.Errorf("not implemented: Recipe - recipe"))
+func (r *queryResolver) Recipe(ctx context.Context, id string) (*model.RecipeTree, error) {
+	recipe, err := r.domain.Domain.UseCase.GetRecipe(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	nodes := []*model.Node{}
+	for _, node := range recipe.Nodes {
+		nodes = append(nodes, &model.Node{
+			ID:    node.ID,
+			Name:  node.Name,
+			Unit:  node.Unit,
+			Total: node.Total,
+			Depth: node.Depth,
+		})
+	}
+
+	edges := []*model.Edge{}
+	for _, edge := range recipe.Edges {
+		edges = append(edges, &model.Edge{
+			Source: edge.Source,
+			Target: edge.Target,
+		})
+	}
+
+	return &model.RecipeTree{
+		Nodes: nodes,
+		Edges: edges,
+	}, nil
 }
 
 // Query returns QueryResolver implementation.

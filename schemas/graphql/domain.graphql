@@ -3,15 +3,25 @@ type Craft {
   name: String!
 }
 
-type Item {
+type RecipeTree {
+  nodes: [Node!]!
+  edges: [Edge!]!
+}
+
+type Node {
   id: String!
   name: String!
   unit: Int!
   total: Int!
-  children: [Item]
+  depth: Int!
+}
+
+type Edge {
+  source: String!
+  target: String!
 }
 
 type Query {
   crafts(name: String!): [Craft!]!
-  recipe(id: String!): [Item!]!
+  recipe(id: String!): RecipeTree!
 }
