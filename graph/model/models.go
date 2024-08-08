@@ -7,17 +7,23 @@ type Craft struct {
 	Name string `json:"name"`
 }
 
+type Depth struct {
+	X int `json:"x"`
+	Y int `json:"y"`
+}
+
 type Edge struct {
 	Source string `json:"source"`
 	Target string `json:"target"`
 }
 
 type Node struct {
-	ID    string `json:"id"`
-	Name  string `json:"name"`
-	Unit  int    `json:"unit"`
-	Total int    `json:"total"`
-	Depth int    `json:"depth"`
+	ID       string `json:"id"`
+	Name     string `json:"name"`
+	Unit     int    `json:"unit"`
+	Total    int    `json:"total"`
+	Depth    *Depth `json:"depth"`
+	NodeType string `json:"node_type"`
 }
 
 type Query struct {

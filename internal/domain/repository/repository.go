@@ -49,7 +49,7 @@ func (r *Repository) GetMaterialTree(craftId string) ([]*schema.MaterialTree, er
 	var materials []*schema.MaterialTree
 
 	query := `
-		SELECT parent_item_id, child_item_id, parent_name, child_name, unit, total, depth
+		SELECT parent_item_id, child_item_id, parent_name, child_name, unit, total, x, y, node_type
         FROM get_material_tree($1)
 	`
 

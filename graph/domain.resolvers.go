@@ -43,7 +43,11 @@ func (r *queryResolver) Recipe(ctx context.Context, id string) (*model.RecipeTre
 			Name:  node.Name,
 			Unit:  node.Unit,
 			Total: node.Total,
-			Depth: node.Depth,
+			Depth: &model.Depth{
+				X: node.X,
+				Y: node.Y,
+			},
+			NodeType: node.NodeType,
 		})
 	}
 

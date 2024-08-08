@@ -50,17 +50,23 @@ type ComplexityRoot struct {
 		Name func(childComplexity int) int
 	}
 
+	Depth struct {
+		X func(childComplexity int) int
+		Y func(childComplexity int) int
+	}
+
 	Edge struct {
 		Source func(childComplexity int) int
 		Target func(childComplexity int) int
 	}
 
 	Node struct {
-		Depth func(childComplexity int) int
-		ID    func(childComplexity int) int
-		Name  func(childComplexity int) int
-		Total func(childComplexity int) int
-		Unit  func(childComplexity int) int
+		Depth    func(childComplexity int) int
+		ID       func(childComplexity int) int
+		Name     func(childComplexity int) int
+		NodeType func(childComplexity int) int
+		Total    func(childComplexity int) int
+		Unit     func(childComplexity int) int
 	}
 
 	Query struct {
@@ -112,6 +118,20 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Craft.Name(childComplexity), true
 
+	case "Depth.x":
+		if e.complexity.Depth.X == nil {
+			break
+		}
+
+		return e.complexity.Depth.X(childComplexity), true
+
+	case "Depth.y":
+		if e.complexity.Depth.Y == nil {
+			break
+		}
+
+		return e.complexity.Depth.Y(childComplexity), true
+
 	case "Edge.source":
 		if e.complexity.Edge.Source == nil {
 			break
@@ -146,6 +166,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Node.Name(childComplexity), true
+
+	case "Node.node_type":
+		if e.complexity.Node.NodeType == nil {
+			break
+		}
+
+		return e.complexity.Node.NodeType(childComplexity), true
 
 	case "Node.total":
 		if e.complexity.Node.Total == nil {
@@ -305,7 +332,13 @@ type Node {
   name: String!
   unit: Int!
   total: Int!
-  depth: Int!
+  depth: Depth!
+  node_type: String!
+}
+
+type Depth {
+  x: Int!
+  y: Int!
 }
 
 type Edge {
@@ -491,6 +524,94 @@ func (ec *executionContext) fieldContext_Craft_name(_ context.Context, field gra
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Depth_x(ctx context.Context, field graphql.CollectedField, obj *model.Depth) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Depth_x(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.X, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Depth_x(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Depth",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Depth_y(ctx context.Context, field graphql.CollectedField, obj *model.Depth) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Depth_y(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Y, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Depth_y(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Depth",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
 		},
 	}
 	return fc, nil
@@ -786,9 +907,9 @@ func (ec *executionContext) _Node_depth(ctx context.Context, field graphql.Colle
 		}
 		return graphql.Null
 	}
-	res := resTmp.(int)
+	res := resTmp.(*model.Depth)
 	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
+	return ec.marshalNDepth2ᚖgithubᚗcomᚋhazuki3417ᚋxivᚑcraftsmanshipᚑapiᚋgraphᚋmodelᚐDepth(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Node_depth(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -798,7 +919,57 @@ func (ec *executionContext) fieldContext_Node_depth(_ context.Context, field gra
 		IsMethod:   false,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
+			switch field.Name {
+			case "x":
+				return ec.fieldContext_Depth_x(ctx, field)
+			case "y":
+				return ec.fieldContext_Depth_y(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Depth", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Node_node_type(ctx context.Context, field graphql.CollectedField, obj *model.Node) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Node_node_type(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.NodeType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Node_node_type(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Node",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -1104,6 +1275,8 @@ func (ec *executionContext) fieldContext_RecipeTree_nodes(_ context.Context, fie
 				return ec.fieldContext_Node_total(ctx, field)
 			case "depth":
 				return ec.fieldContext_Node_depth(ctx, field)
+			case "node_type":
+				return ec.fieldContext_Node_node_type(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Node", field.Name)
 		},
@@ -2986,6 +3159,50 @@ func (ec *executionContext) _Craft(ctx context.Context, sel ast.SelectionSet, ob
 	return out
 }
 
+var depthImplementors = []string{"Depth"}
+
+func (ec *executionContext) _Depth(ctx context.Context, sel ast.SelectionSet, obj *model.Depth) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, depthImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Depth")
+		case "x":
+			out.Values[i] = ec._Depth_x(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "y":
+			out.Values[i] = ec._Depth_y(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var edgeImplementors = []string{"Edge"}
 
 func (ec *executionContext) _Edge(ctx context.Context, sel ast.SelectionSet, obj *model.Edge) graphql.Marshaler {
@@ -3063,6 +3280,11 @@ func (ec *executionContext) _Node(ctx context.Context, sel ast.SelectionSet, obj
 			}
 		case "depth":
 			out.Values[i] = ec._Node_depth(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "node_type":
+			out.Values[i] = ec._Node_node_type(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -3620,6 +3842,16 @@ func (ec *executionContext) marshalNCraft2ᚖgithubᚗcomᚋhazuki3417ᚋxivᚑc
 		return graphql.Null
 	}
 	return ec._Craft(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNDepth2ᚖgithubᚗcomᚋhazuki3417ᚋxivᚑcraftsmanshipᚑapiᚋgraphᚋmodelᚐDepth(ctx context.Context, sel ast.SelectionSet, v *model.Depth) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Depth(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalNEdge2ᚕᚖgithubᚗcomᚋhazuki3417ᚋxivᚑcraftsmanshipᚑapiᚋgraphᚋmodelᚐEdgeᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Edge) graphql.Marshaler {

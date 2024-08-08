@@ -13,7 +13,13 @@ type Node {
   name: String!
   unit: Int!
   total: Int!
-  depth: Int!
+  depth: Depth!
+  node_type: String!
+}
+
+type Depth {
+  x: Int!
+  y: Int!
 }
 
 type Edge {

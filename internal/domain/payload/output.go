@@ -11,11 +11,13 @@ type Recipe struct {
 }
 
 type Node struct {
-	ID    string
-	Name  string
-	Unit  int
-	Total int
-	Depth int
+	ID       string
+	Name     string
+	Unit     int
+	Total    int
+	X        int
+	Y        int
+	NodeType string
 }
 
 type Edge struct {

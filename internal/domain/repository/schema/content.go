@@ -12,5 +12,7 @@ type MaterialTree struct {
 	ChildName    string `db:"child_name"`
 	Unit         int    `db:"unit"`
 	Total        int    `db:"total"`
-	Depth        int    `db:"depth"`
+	X            int    `db:"x"`
+	Y            int    `db:"y"`
+	NodeType     string `db:"node_type"`
 }

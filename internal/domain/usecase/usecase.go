@@ -49,11 +49,13 @@ func (u *UseCase) GetRecipe(craftId string) (*payload.Recipe, error) {
 	for _, material := range materials {
 		if _, exists := tmpNodes[material.ChildItemId]; !exists {
 			tmpNodes[material.ChildItemId] = &payload.Node{
-				ID:    material.ChildItemId,
-				Name:  material.ChildName,
-				Unit:  material.Unit,
-				Total: material.Total,
-				Depth: material.Depth,
+				ID:       material.ChildItemId,
+				Name:     material.ChildName,
+				Unit:     material.Unit,
+				Total:    material.Total,
+				X:        material.X,
+				Y:        material.Y,
+				NodeType: material.NodeType,
 			}
 		}
 
