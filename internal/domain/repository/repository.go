@@ -28,10 +28,10 @@ func (r *Repository) GetCrafts(name string) ([]*schema.Craft, error) {
 	var crafts []*schema.Craft
 
 	query := `
-		SELECT item_id, item_name
+		SELECT recipe_id, name
         FROM crafts
-        WHERE item_name ILIKE $1
-        ORDER BY item_name
+        WHERE name ILIKE $1
+        ORDER BY name
         LIMIT $2
 	`
 
