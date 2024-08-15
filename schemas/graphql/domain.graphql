@@ -1,6 +1,14 @@
+type Level {
+  item: Int
+  craft: Int!
+}
+
 type Craft {
   id: ID!
   name: String!
+  pieces: Int!
+  job: String!
+  level: Level!
 }
 
 type Material {

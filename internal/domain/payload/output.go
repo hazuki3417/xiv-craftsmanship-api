@@ -1,8 +1,16 @@
 package payload
 
+type Level struct {
+	Item  *int
+	Craft int
+}
+
 type Craft struct {
-	ID   string
-	Name string
+	ID     string
+	Name   string
+	Job    string
+	Pieces int
+	Level  Level
 }
 
 type Material struct {

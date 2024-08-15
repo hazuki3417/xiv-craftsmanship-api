@@ -21,8 +21,14 @@ func (r *queryResolver) Crafts(ctx context.Context, name string) ([]*model.Craft
 	result := []*model.Craft{}
 	for _, craft := range crafts {
 		result = append(result, &model.Craft{
-			ID:   craft.ID,
-			Name: craft.Name,
+			ID:     craft.ID,
+			Name:   craft.Name,
+			Job:    craft.Job,
+			Pieces: craft.Pieces,
+			Level: &model.Level{
+				Item:  craft.Level.Item,
+				Craft: craft.Level.Craft,
+			},
 		})
 	}
 	return result, nil

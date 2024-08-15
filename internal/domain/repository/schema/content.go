@@ -1,8 +1,12 @@
 package schema
 
 type Craft struct {
-	Id   string `db:"item_id"`
-	Name string `db:"name"`
+	Id          string `db:"item_id"`
+	Name        string `db:"name"`
+	Pieces      int    `db:"pieces"`
+	Job         string `db:"job"`
+	ItemLevel   *int   `db:"item_level"`
+	RecipeLevel int    `db:"recipe_level"`
 }
 
 type Material struct {

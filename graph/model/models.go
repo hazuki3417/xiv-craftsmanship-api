@@ -3,8 +3,16 @@
 package model
 
 type Craft struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
+	ID     string `json:"id"`
+	Name   string `json:"name"`
+	Pieces int    `json:"pieces"`
+	Job    string `json:"job"`
+	Level  *Level `json:"level"`
+}
+
+type Level struct {
+	Item  *int `json:"item,omitempty"`
+	Craft int  `json:"craft"`
 }
 
 type Material struct {
