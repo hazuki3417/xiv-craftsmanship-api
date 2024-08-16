@@ -45,6 +45,14 @@ type DirectiveRoot struct {
 }
 
 type ComplexityRoot struct {
+	Child struct {
+		ItemID    func(childComplexity int) int
+		ItemName  func(childComplexity int) int
+		ItemTotal func(childComplexity int) int
+		ItemType  func(childComplexity int) int
+		ItemUnit  func(childComplexity int) int
+	}
+
 	Craft struct {
 		ID     func(childComplexity int) int
 		Job    func(childComplexity int) int
@@ -59,12 +67,16 @@ type ComplexityRoot struct {
 	}
 
 	Material struct {
-		ChildID    func(childComplexity int) int
-		ChildName  func(childComplexity int) int
-		ParentID   func(childComplexity int) int
-		ParentName func(childComplexity int) int
-		Total      func(childComplexity int) int
-		Unit       func(childComplexity int) int
+		Child  func(childComplexity int) int
+		Parent func(childComplexity int) int
+		TreeID func(childComplexity int) int
+	}
+
+	Parent struct {
+		CraftJob   func(childComplexity int) int
+		CraftLevel func(childComplexity int) int
+		ItemID     func(childComplexity int) int
+		ItemName   func(childComplexity int) int
 	}
 
 	Query struct {
@@ -96,6 +108,41 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 	ec := executionContext{nil, e, 0, 0, nil}
 	_ = ec
 	switch typeName + "." + field {
+
+	case "Child.itemId":
+		if e.complexity.Child.ItemID == nil {
+			break
+		}
+
+		return e.complexity.Child.ItemID(childComplexity), true
+
+	case "Child.itemName":
+		if e.complexity.Child.ItemName == nil {
+			break
+		}
+
+		return e.complexity.Child.ItemName(childComplexity), true
+
+	case "Child.itemTotal":
+		if e.complexity.Child.ItemTotal == nil {
+			break
+		}
+
+		return e.complexity.Child.ItemTotal(childComplexity), true
+
+	case "Child.itemType":
+		if e.complexity.Child.ItemType == nil {
+			break
+		}
+
+		return e.complexity.Child.ItemType(childComplexity), true
+
+	case "Child.itemUnit":
+		if e.complexity.Child.ItemUnit == nil {
+			break
+		}
+
+		return e.complexity.Child.ItemUnit(childComplexity), true
 
 	case "Craft.id":
 		if e.complexity.Craft.ID == nil {
@@ -146,47 +193,54 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Level.Item(childComplexity), true
 
-	case "Material.childId":
-		if e.complexity.Material.ChildID == nil {
+	case "Material.child":
+		if e.complexity.Material.Child == nil {
 			break
 		}
 
-		return e.complexity.Material.ChildID(childComplexity), true
+		return e.complexity.Material.Child(childComplexity), true
 
-	case "Material.childName":
-		if e.complexity.Material.ChildName == nil {
+	case "Material.parent":
+		if e.complexity.Material.Parent == nil {
 			break
 		}
 
-		return e.complexity.Material.ChildName(childComplexity), true
+		return e.complexity.Material.Parent(childComplexity), true
 
-	case "Material.parentId":
-		if e.complexity.Material.ParentID == nil {
+	case "Material.treeId":
+		if e.complexity.Material.TreeID == nil {
 			break
 		}
 
-		return e.complexity.Material.ParentID(childComplexity), true
+		return e.complexity.Material.TreeID(childComplexity), true
 
-	case "Material.parentName":
-		if e.complexity.Material.ParentName == nil {
+	case "Parent.craftJob":
+		if e.complexity.Parent.CraftJob == nil {
 			break
 		}
 
-		return e.complexity.Material.ParentName(childComplexity), true
+		return e.complexity.Parent.CraftJob(childComplexity), true
 
-	case "Material.total":
-		if e.complexity.Material.Total == nil {
+	case "Parent.craftLevel":
+		if e.complexity.Parent.CraftLevel == nil {
 			break
 		}
 
-		return e.complexity.Material.Total(childComplexity), true
+		return e.complexity.Parent.CraftLevel(childComplexity), true
 
-	case "Material.unit":
-		if e.complexity.Material.Unit == nil {
+	case "Parent.itemId":
+		if e.complexity.Parent.ItemID == nil {
 			break
 		}
 
-		return e.complexity.Material.Unit(childComplexity), true
+		return e.complexity.Parent.ItemID(childComplexity), true
+
+	case "Parent.itemName":
+		if e.complexity.Parent.ItemName == nil {
+			break
+		}
+
+		return e.complexity.Parent.ItemName(childComplexity), true
 
 	case "Query.crafts":
 		if e.complexity.Query.Crafts == nil {
@@ -316,13 +370,25 @@ type Craft {
   level: Level!
 }
 
+type Parent {
+  itemId: String!
+  itemName: String!
+  craftJob: String!
+  craftLevel: Int!
+}
+
+type Child {
+  itemId: String!
+  itemName: String!
+  itemType: String!
+  itemUnit: Int!
+  itemTotal: Int!
+}
+
 type Material {
-  parentId: String!
-  childId: String!
-  parentName: String!
-  childName: String!
-  unit: Int!
-  total: Int!
+  treeId: String!
+  parent: Parent!
+  child: Child!
 }
 
 type Query {
@@ -419,6 +485,226 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 // endregion ************************** directives.gotpl **************************
 
 // region    **************************** field.gotpl *****************************
+
+func (ec *executionContext) _Child_itemId(ctx context.Context, field graphql.CollectedField, obj *model.Child) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Child_itemId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ItemID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Child_itemId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Child",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Child_itemName(ctx context.Context, field graphql.CollectedField, obj *model.Child) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Child_itemName(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ItemName, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Child_itemName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Child",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Child_itemType(ctx context.Context, field graphql.CollectedField, obj *model.Child) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Child_itemType(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ItemType, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Child_itemType(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Child",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Child_itemUnit(ctx context.Context, field graphql.CollectedField, obj *model.Child) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Child_itemUnit(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ItemUnit, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Child_itemUnit(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Child",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Child_itemTotal(ctx context.Context, field graphql.CollectedField, obj *model.Child) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Child_itemTotal(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ItemTotal, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Child_itemTotal(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Child",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
 
 func (ec *executionContext) _Craft_id(ctx context.Context, field graphql.CollectedField, obj *model.Craft) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Craft_id(ctx, field)
@@ -731,8 +1017,8 @@ func (ec *executionContext) fieldContext_Level_craft(_ context.Context, field gr
 	return fc, nil
 }
 
-func (ec *executionContext) _Material_parentId(ctx context.Context, field graphql.CollectedField, obj *model.Material) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Material_parentId(ctx, field)
+func (ec *executionContext) _Material_treeId(ctx context.Context, field graphql.CollectedField, obj *model.Material) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Material_treeId(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -745,7 +1031,7 @@ func (ec *executionContext) _Material_parentId(ctx context.Context, field graphq
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ParentID, nil
+		return obj.TreeID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -762,7 +1048,7 @@ func (ec *executionContext) _Material_parentId(ctx context.Context, field graphq
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Material_parentId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Material_treeId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Material",
 		Field:      field,
@@ -775,8 +1061,8 @@ func (ec *executionContext) fieldContext_Material_parentId(_ context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _Material_childId(ctx context.Context, field graphql.CollectedField, obj *model.Material) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Material_childId(ctx, field)
+func (ec *executionContext) _Material_parent(ctx context.Context, field graphql.CollectedField, obj *model.Material) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Material_parent(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -789,7 +1075,117 @@ func (ec *executionContext) _Material_childId(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ChildID, nil
+		return obj.Parent, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Parent)
+	fc.Result = res
+	return ec.marshalNParent2ᚖgithubᚗcomᚋhazuki3417ᚋxivᚑcraftsmanshipᚑapiᚋgraphᚋmodelᚐParent(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Material_parent(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Material",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "itemId":
+				return ec.fieldContext_Parent_itemId(ctx, field)
+			case "itemName":
+				return ec.fieldContext_Parent_itemName(ctx, field)
+			case "craftJob":
+				return ec.fieldContext_Parent_craftJob(ctx, field)
+			case "craftLevel":
+				return ec.fieldContext_Parent_craftLevel(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Parent", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Material_child(ctx context.Context, field graphql.CollectedField, obj *model.Material) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Material_child(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Child, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Child)
+	fc.Result = res
+	return ec.marshalNChild2ᚖgithubᚗcomᚋhazuki3417ᚋxivᚑcraftsmanshipᚑapiᚋgraphᚋmodelᚐChild(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Material_child(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Material",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "itemId":
+				return ec.fieldContext_Child_itemId(ctx, field)
+			case "itemName":
+				return ec.fieldContext_Child_itemName(ctx, field)
+			case "itemType":
+				return ec.fieldContext_Child_itemType(ctx, field)
+			case "itemUnit":
+				return ec.fieldContext_Child_itemUnit(ctx, field)
+			case "itemTotal":
+				return ec.fieldContext_Child_itemTotal(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Child", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Parent_itemId(ctx context.Context, field graphql.CollectedField, obj *model.Parent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Parent_itemId(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ItemID, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -806,9 +1202,9 @@ func (ec *executionContext) _Material_childId(ctx context.Context, field graphql
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Material_childId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Parent_itemId(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Material",
+		Object:     "Parent",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -819,8 +1215,8 @@ func (ec *executionContext) fieldContext_Material_childId(_ context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Material_parentName(ctx context.Context, field graphql.CollectedField, obj *model.Material) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Material_parentName(ctx, field)
+func (ec *executionContext) _Parent_itemName(ctx context.Context, field graphql.CollectedField, obj *model.Parent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Parent_itemName(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -833,7 +1229,7 @@ func (ec *executionContext) _Material_parentName(ctx context.Context, field grap
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ParentName, nil
+		return obj.ItemName, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -850,9 +1246,9 @@ func (ec *executionContext) _Material_parentName(ctx context.Context, field grap
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Material_parentName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Parent_itemName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Material",
+		Object:     "Parent",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -863,8 +1259,8 @@ func (ec *executionContext) fieldContext_Material_parentName(_ context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _Material_childName(ctx context.Context, field graphql.CollectedField, obj *model.Material) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Material_childName(ctx, field)
+func (ec *executionContext) _Parent_craftJob(ctx context.Context, field graphql.CollectedField, obj *model.Parent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Parent_craftJob(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -877,7 +1273,7 @@ func (ec *executionContext) _Material_childName(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ChildName, nil
+		return obj.CraftJob, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -894,9 +1290,9 @@ func (ec *executionContext) _Material_childName(ctx context.Context, field graph
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Material_childName(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Parent_craftJob(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Material",
+		Object:     "Parent",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -907,8 +1303,8 @@ func (ec *executionContext) fieldContext_Material_childName(_ context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Material_unit(ctx context.Context, field graphql.CollectedField, obj *model.Material) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Material_unit(ctx, field)
+func (ec *executionContext) _Parent_craftLevel(ctx context.Context, field graphql.CollectedField, obj *model.Parent) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Parent_craftLevel(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -921,7 +1317,7 @@ func (ec *executionContext) _Material_unit(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Unit, nil
+		return obj.CraftLevel, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -938,53 +1334,9 @@ func (ec *executionContext) _Material_unit(ctx context.Context, field graphql.Co
 	return ec.marshalNInt2int(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Material_unit(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Parent_craftLevel(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Material",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type Int does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Material_total(ctx context.Context, field graphql.CollectedField, obj *model.Material) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Material_total(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Total, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(int)
-	fc.Result = res
-	return ec.marshalNInt2int(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Material_total(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Material",
+		Object:     "Parent",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1101,18 +1453,12 @@ func (ec *executionContext) fieldContext_Query_materials(ctx context.Context, fi
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "parentId":
-				return ec.fieldContext_Material_parentId(ctx, field)
-			case "childId":
-				return ec.fieldContext_Material_childId(ctx, field)
-			case "parentName":
-				return ec.fieldContext_Material_parentName(ctx, field)
-			case "childName":
-				return ec.fieldContext_Material_childName(ctx, field)
-			case "unit":
-				return ec.fieldContext_Material_unit(ctx, field)
-			case "total":
-				return ec.fieldContext_Material_total(ctx, field)
+			case "treeId":
+				return ec.fieldContext_Material_treeId(ctx, field)
+			case "parent":
+				return ec.fieldContext_Material_parent(ctx, field)
+			case "child":
+				return ec.fieldContext_Material_child(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Material", field.Name)
 		},
@@ -3041,6 +3387,65 @@ func (ec *executionContext) fieldContext___Type_specifiedByURL(_ context.Context
 
 // region    **************************** object.gotpl ****************************
 
+var childImplementors = []string{"Child"}
+
+func (ec *executionContext) _Child(ctx context.Context, sel ast.SelectionSet, obj *model.Child) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, childImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Child")
+		case "itemId":
+			out.Values[i] = ec._Child_itemId(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "itemName":
+			out.Values[i] = ec._Child_itemName(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "itemType":
+			out.Values[i] = ec._Child_itemType(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "itemUnit":
+			out.Values[i] = ec._Child_itemUnit(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "itemTotal":
+			out.Values[i] = ec._Child_itemTotal(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var craftImplementors = []string{"Craft"}
 
 func (ec *executionContext) _Craft(ctx context.Context, sel ast.SelectionSet, obj *model.Craft) graphql.Marshaler {
@@ -3152,33 +3557,72 @@ func (ec *executionContext) _Material(ctx context.Context, sel ast.SelectionSet,
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Material")
-		case "parentId":
-			out.Values[i] = ec._Material_parentId(ctx, field, obj)
+		case "treeId":
+			out.Values[i] = ec._Material_treeId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "childId":
-			out.Values[i] = ec._Material_childId(ctx, field, obj)
+		case "parent":
+			out.Values[i] = ec._Material_parent(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "parentName":
-			out.Values[i] = ec._Material_parentName(ctx, field, obj)
+		case "child":
+			out.Values[i] = ec._Material_child(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "childName":
-			out.Values[i] = ec._Material_childName(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
+var parentImplementors = []string{"Parent"}
+
+func (ec *executionContext) _Parent(ctx context.Context, sel ast.SelectionSet, obj *model.Parent) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, parentImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Parent")
+		case "itemId":
+			out.Values[i] = ec._Parent_itemId(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "unit":
-			out.Values[i] = ec._Material_unit(ctx, field, obj)
+		case "itemName":
+			out.Values[i] = ec._Parent_itemName(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "total":
-			out.Values[i] = ec._Material_total(ctx, field, obj)
+		case "craftJob":
+			out.Values[i] = ec._Parent_craftJob(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "craftLevel":
+			out.Values[i] = ec._Parent_craftLevel(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
@@ -3640,6 +4084,16 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
+func (ec *executionContext) marshalNChild2ᚖgithubᚗcomᚋhazuki3417ᚋxivᚑcraftsmanshipᚑapiᚋgraphᚋmodelᚐChild(ctx context.Context, sel ast.SelectionSet, v *model.Child) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Child(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalNCraft2ᚕᚖgithubᚗcomᚋhazuki3417ᚋxivᚑcraftsmanshipᚑapiᚋgraphᚋmodelᚐCraftᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Craft) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -3786,6 +4240,16 @@ func (ec *executionContext) marshalNMaterial2ᚖgithubᚗcomᚋhazuki3417ᚋxiv�
 		return graphql.Null
 	}
 	return ec._Material(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNParent2ᚖgithubᚗcomᚋhazuki3417ᚋxivᚑcraftsmanshipᚑapiᚋgraphᚋmodelᚐParent(ctx context.Context, sel ast.SelectionSet, v *model.Parent) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Parent(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

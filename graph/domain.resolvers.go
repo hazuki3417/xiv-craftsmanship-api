@@ -45,12 +45,20 @@ func (r *queryResolver) Materials(ctx context.Context, craftID string) ([]*model
 	result := []*model.Material{}
 	for _, material := range materials {
 		result = append(result, &model.Material{
-			ParentID:   material.ParentItemId,
-			ChildID:    material.ChildItemId,
-			ParentName: material.ParentName,
-			ChildName:  material.ChildName,
-			Unit:       material.Unit,
-			Total:      material.Total,
+			TreeID: material.TreeId,
+			Parent: &model.Parent{
+				ItemID:     material.Parent.ItemId,
+				ItemName:   material.Parent.ItemName,
+				CraftJob:   material.Parent.CraftJob,
+				CraftLevel: material.Parent.CraftLevel,
+			},
+			Child: &model.Child{
+				ItemID:    material.Child.ItemId,
+				ItemName:  material.Child.ItemName,
+				ItemUnit:  material.Child.ItemUnit,
+				ItemTotal: material.Child.ItemTotal,
+				ItemType:  material.Child.ItemType,
+			},
 		})
 	}
 

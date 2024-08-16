@@ -53,12 +53,20 @@ func (u *UseCase) GetMaterials(craftId string) ([]*payload.Material, error) {
 	var result []*payload.Material
 	for _, material := range materials {
 		result = append(result, &payload.Material{
-			ParentItemId: material.ParentItemId,
-			ParentName:   material.ParentName,
-			ChildItemId:  material.ChildItemId,
-			ChildName:    material.ChildName,
-			Unit:         material.Unit,
-			Total:        material.Total,
+			TreeId: material.TreeId,
+			Parent: payload.Parent{
+				ItemId:     material.ParentItemId,
+				ItemName:   material.ParentItemName,
+				CraftJob:   material.ParentCraftJob,
+				CraftLevel: material.ParentCraftLevel,
+			},
+			Child: payload.Child{
+				ItemId:    material.ChildItemId,
+				ItemName:  material.ChildItemName,
+				ItemType:  material.ChildItemType,
+				ItemUnit:  material.Unit,
+				ItemTotal: material.Total,
+			},
 		})
 	}
 

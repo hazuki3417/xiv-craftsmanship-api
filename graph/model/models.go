@@ -2,6 +2,14 @@
 
 package model
 
+type Child struct {
+	ItemID    string `json:"itemId"`
+	ItemName  string `json:"itemName"`
+	ItemType  string `json:"itemType"`
+	ItemUnit  int    `json:"itemUnit"`
+	ItemTotal int    `json:"itemTotal"`
+}
+
 type Craft struct {
 	ID     string `json:"id"`
 	Name   string `json:"name"`
@@ -16,12 +24,16 @@ type Level struct {
 }
 
 type Material struct {
-	ParentID   string `json:"parentId"`
-	ChildID    string `json:"childId"`
-	ParentName string `json:"parentName"`
-	ChildName  string `json:"childName"`
-	Unit       int    `json:"unit"`
-	Total      int    `json:"total"`
+	TreeID string  `json:"treeId"`
+	Parent *Parent `json:"parent"`
+	Child  *Child  `json:"child"`
+}
+
+type Parent struct {
+	ItemID     string `json:"itemId"`
+	ItemName   string `json:"itemName"`
+	CraftJob   string `json:"craftJob"`
+	CraftLevel int    `json:"craftLevel"`
 }
 
 type Query struct {

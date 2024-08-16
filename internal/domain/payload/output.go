@@ -13,11 +13,23 @@ type Craft struct {
 	Level  Level
 }
 
+type Parent struct {
+	ItemId     string
+	ItemName   string
+	CraftJob   string
+	CraftLevel int
+}
+
+type Child struct {
+	ItemId    string
+	ItemName  string
+	ItemType  string
+	ItemUnit  int
+	ItemTotal int
+}
+
 type Material struct {
-	ParentItemId string
-	ChildItemId  string
-	ParentName   string
-	ChildName    string
-	Unit         int
-	Total        int
+	TreeId string
+	Parent Parent
+	Child  Child
 }

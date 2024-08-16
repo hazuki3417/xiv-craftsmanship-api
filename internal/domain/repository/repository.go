@@ -29,10 +29,10 @@ func (r *Repository) GetCrafts(name string) ([]*schema.Craft, error) {
 
 	query := `
 		SELECT item_id, name, pieces, job, item_level, recipe_level
-        FROM crafts
-        WHERE name ILIKE $1
-        ORDER BY name
-        LIMIT $2
+		FROM crafts
+		WHERE name ILIKE $1
+		ORDER BY name
+		LIMIT $2
 	`
 
 	limit := 8
@@ -49,8 +49,20 @@ func (r *Repository) GetMaterials(craftId string) ([]*schema.Material, error) {
 	var materials []*schema.Material
 
 	query := `
-		SELECT parent_item_id, child_item_id, parent_name, child_name, unit, total
-        FROM get_materials($1)
+		SELECT
+			m.tree_id,
+			m.parent_item_id,
+			m.parent_item_name,
+			r.level as parent_craft_level,
+			r.job as parent_craft_job,
+			m.child_item_id,
+			m.child_item_name,
+			m.child_item_type,
+			m.unit,
+			m.total
+		FROM get_materials($1) m
+		JOIN recipes r
+		ON m.parent_item_id = r.item_id
 	`
 
 	err := r.postgresql.SelectContext(ctx, &materials, query, craftId)

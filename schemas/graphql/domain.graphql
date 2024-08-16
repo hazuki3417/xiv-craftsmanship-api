@@ -11,13 +11,25 @@ type Craft {
   level: Level!
 }
 
+type Parent {
+  itemId: String!
+  itemName: String!
+  craftJob: String!
+  craftLevel: Int!
+}
+
+type Child {
+  itemId: String!
+  itemName: String!
+  itemType: String!
+  itemUnit: Int!
+  itemTotal: Int!
+}
+
 type Material {
-  parentId: String!
-  childId: String!
-  parentName: String!
-  childName: String!
-  unit: Int!
-  total: Int!
+  treeId: String!
+  parent: Parent!
+  child: Child!
 }
 
 type Query {

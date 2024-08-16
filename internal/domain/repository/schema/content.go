@@ -10,10 +10,14 @@ type Craft struct {
 }
 
 type Material struct {
-	ParentItemId string `db:"parent_item_id"`
-	ChildItemId  string `db:"child_item_id"`
-	ParentName   string `db:"parent_name"`
-	ChildName    string `db:"child_name"`
-	Unit         int    `db:"unit"`
-	Total        int    `db:"total"`
+	TreeId           string `db:"tree_id"`
+	ParentItemId     string `db:"parent_item_id"`
+	ParentItemName   string `db:"parent_item_name"`
+	ParentCraftLevel int    `db:"parent_craft_level"`
+	ParentCraftJob   string `db:"parent_craft_job"`
+	ChildItemId      string `db:"child_item_id"`
+	ChildItemName    string `db:"child_item_name"`
+	ChildItemType    string `db:"child_item_type"`
+	Unit             int    `db:"unit"`
+	Total            int    `db:"total"`
 }
