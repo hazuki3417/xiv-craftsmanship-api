@@ -30,5 +30,5 @@ EXPOSE 8080
 # Command to run the executable
 ENTRYPOINT ["./main"]
 
-# HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
-#   CMD wget --quiet --spider http://localhost:8080/health || exit 1
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD wget --quiet --spider http://localhost:8080/health || exit 1
