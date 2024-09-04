@@ -15,9 +15,16 @@ COPY . .
 RUN go build -o main .
 
 ################################################################################
-# Final stage
+# final stage
 ################################################################################
 FROM alpine:latest
+
+ENV STAGE=
+ENV PORT=
+ENV POSTGRE_SQL_HOST=
+ENV POSTGRE_SQL_USERNAME=
+ENV POSTGRE_SQL_PASSWORD=
+ENV POSTGRE_SQL_DB=
 
 # Set the Current Working Directory inside the container
 WORKDIR /root/

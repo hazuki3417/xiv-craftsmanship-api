@@ -35,7 +35,7 @@ func main() {
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(config))
 
 	// NOTE: playground endpoint（development only）
-	if container.Env.Environment == "development" {
+	if container.Env.Stage == "development" {
 		http.Handle("/", playground.Handler("GraphQL playground", "/graphql"))
 	}
 	// NOTE: graphql endpoint

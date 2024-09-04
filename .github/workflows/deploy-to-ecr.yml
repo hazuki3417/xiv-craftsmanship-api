@@ -29,13 +29,15 @@ jobs:
         run: aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ secrets.ECR_REGISTRY }}
 
       - name: Build Docker image
-        working-directory: ./docker/${{ env.ENVIRONMENT }}/${{ env.IMAGE_NAME }}
         run: |
-          make build
+          docker build \
+            -t ${{ env.IMAGE_NAME }}:latest \
+            -f docker/${{ env.ENVIRONMENT }}/${{ env.IMAGE_NAME }}/Dockerfile \
+            .
 
       - name: Set Tag
         run: |
-          docker tag ${{ env.IMAGE_NAME }}:latest-${{ env.ENVIRONMENT }} ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
+          docker tag ${{ env.IMAGE_NAME }}:latest ${{ secrets.ECR_REGISTRY }}/${{ secrets.ECR_REPOSITORY }}:latest
 
       - name: Push Docker image to Amazon ECR
         run: |

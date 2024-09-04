@@ -25,7 +25,7 @@ type Container struct {
 
 // NOTE: 環境変数の構造体
 type Env struct {
-	Environment        string `env:"ENV" envDefault:"development"`
+	Stage              string `env:"STAGE" envDefault:"development"`
 	Port               string `env:"PORT" envDefault:"8080"`
 	PostgreSqlHost     string `env:"POSTGRE_SQL_HOST" envDefault:"localhost:5432"`
 	PostgreSqlUsername string `env:"POSTGRE_SQL_USERNAME" envDefault:"example"`

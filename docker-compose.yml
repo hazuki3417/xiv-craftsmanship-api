@@ -13,9 +13,12 @@ services:
   #   extra_hosts:
   #     - host.docker.internal:host-gateway
   #   environment:
-  #     TZ: Asia/Tokyo
-  #     MONGO_INITDB_ROOT_USERNAME: develop
-  #     MONGO_INITDB_ROOT_PASSWORD: develop
+  #     STAGE: development
+  #     PORT: 8080
+  #     POSTGRE_SQL_HOST: localhost:5432
+  #     POSTGRE_SQL_USERNAME: example
+  #     POSTGRE_SQL_PASSWORD: example
+  #     POSTGRE_SQL_DB: example
   #   ports:
   #     - 8080:8080
   #   profiles:
