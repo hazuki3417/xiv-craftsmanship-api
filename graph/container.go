@@ -125,7 +125,7 @@ func postgresql(env *Env, logger *zap.Logger) (*sqlx.DB, func()) {
 	db, err := sqlx.Connect("postgres", uri)
 	if err != nil {
 		logger.Error(ServiceName, zap.String("message", "Failed to connect to database"), zap.Error(err))
-		// os.Exit(1)
+		os.Exit(1)
 	}
 
 	return db, func() {
