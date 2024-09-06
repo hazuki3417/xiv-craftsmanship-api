@@ -62,7 +62,7 @@ func environment(logger *zap.Logger) *Env {
 	// NOTE: 環境変数のバリデーション + パース（環境変数を構造体にマッピング）
 	if err := env.Parse(&envconfig); err != nil {
 		logger.Error(ServiceName, zap.String("message", "Failed to parse environment variables"), zap.Error(err))
-		// os.Exit(1)
+		os.Exit(1)
 	}
 	return &envconfig
 }
@@ -125,7 +125,7 @@ func postgresql(env *Env, logger *zap.Logger) (*sqlx.DB, func()) {
 	db, err := sqlx.Connect("postgres", uri)
 	if err != nil {
 		logger.Error(ServiceName, zap.String("message", "Failed to connect to database"), zap.Error(err))
-		os.Exit(1)
+		// os.Exit(1)
 	}
 
 	return db, func() {
