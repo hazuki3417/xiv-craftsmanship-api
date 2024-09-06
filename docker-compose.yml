@@ -12,10 +12,12 @@ services:
   #     - xiv-craftsmanship-api-network
   #   extra_hosts:
   #     - host.docker.internal:host-gateway
+  #   depends_on:
+  #     - xiv-craftsmanship-db
   #   environment:
   #     STAGE: development
   #     PORT: 8080
-  #     POSTGRE_SQL_HOST: localhost:5432
+  #     POSTGRE_SQL_HOST: xiv-craftsmanship-db:5432
   #     POSTGRE_SQL_USERNAME: example
   #     POSTGRE_SQL_PASSWORD: example
   #     POSTGRE_SQL_DB: example
