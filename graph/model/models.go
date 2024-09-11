@@ -12,6 +12,7 @@ type Child struct {
 
 type Craft struct {
 	ID     string `json:"id"`
+	ItemID string `json:"itemId"`
 	Name   string `json:"name"`
 	Pieces int    `json:"pieces"`
 	Job    string `json:"job"`

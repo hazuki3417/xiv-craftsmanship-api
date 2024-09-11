@@ -4,7 +4,8 @@ type Level {
 }
 
 type Craft {
-  id: ID!
+  id: String!
+  itemId: String!
   name: String!
   pieces: Int!
   job: String!
