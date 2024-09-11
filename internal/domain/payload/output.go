@@ -6,7 +6,8 @@ type Level struct {
 }
 
 type Craft struct {
-	ID     string
+	Id     string
+	ItemId string
 	Name   string
 	Job    string
 	Pieces int

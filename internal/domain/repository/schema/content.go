@@ -2,6 +2,7 @@ package schema
 
 type Craft struct {
 	Id          string `db:"recipe_id"`
+	ItemId      string `db:"item_id"`
 	Name        string `db:"name"`
 	Pieces      int    `db:"pieces"`
 	Job         string `db:"job"`

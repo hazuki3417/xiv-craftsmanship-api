@@ -28,7 +28,7 @@ func (r *Repository) GetCrafts(name string) ([]*schema.Craft, error) {
 	var crafts []*schema.Craft
 
 	query := `
-		SELECT recipe_id, name, pieces, job, item_level, recipe_level
+		SELECT recipe_id, item_id, name, pieces, job, item_level, recipe_level
 		FROM crafts
 		WHERE name ILIKE $1
 		ORDER BY name
