@@ -2,6 +2,14 @@ name: Build and Deploy to ECR
 
 on:
   workflow_dispatch: # 手動で実行するためのトリガー
+  push:
+    branches:
+      - main
+    paths:
+      - docker/*
+      - graph/**/*.go
+      - internal/**/*.go
+      - server.go
 
 env:
   ENVIRONMENT: develop
