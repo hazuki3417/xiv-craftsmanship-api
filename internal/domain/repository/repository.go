@@ -62,7 +62,7 @@ func (r *Repository) GetMaterials(craftId string) ([]*schema.Material, error) {
 			m.total
 		FROM get_materials($1) m
 		JOIN recipes r
-		ON m.parent_item_id = r.item_id
+		ON m.recipe_id = r.id
 	`
 
 	err := r.postgresql.SelectContext(ctx, &materials, query, craftId)
