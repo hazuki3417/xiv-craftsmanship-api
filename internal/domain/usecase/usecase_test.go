@@ -4,14 +4,14 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hazuki3417/xiv-craftsmanship-api/graph"
+	"github.com/hazuki3417/xiv-craftsmanship-api/internal"
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal/domain/repository"
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal/domain/service"
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal/domain/usecase"
 )
 
 func TestGetMaterials(t *testing.T) {
-	container, close := graph.NewContainer()
+	container, close := internal.NewContainer()
 	defer close()
 
 	service := service.New(container.Logger)

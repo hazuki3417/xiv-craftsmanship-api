@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/hazuki3417/xiv-craftsmanship-api/graph"
+	"github.com/hazuki3417/xiv-craftsmanship-api/internal"
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal/domain/repository"
 )
 
 func TestGetParentItemId(t *testing.T) {
-	container, close := graph.NewContainer()
+	container, close := internal.NewContainer()
 	defer close()
 
 	repository := repository.New(container.Logger, container.Validator, container.PostgreSQL)
@@ -23,7 +23,7 @@ func TestGetParentItemId(t *testing.T) {
 }
 
 func TestGetMaterials(t *testing.T) {
-	container, close := graph.NewContainer()
+	container, close := internal.NewContainer()
 	defer close()
 
 	repository := repository.New(container.Logger, container.Validator, container.PostgreSQL)

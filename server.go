@@ -12,7 +12,7 @@ import (
 )
 
 func main() {
-	container, close := graph.NewContainer()
+	container, close := internal.NewContainer()
 	defer close()
 
 	domain := internal.NewDomain(
