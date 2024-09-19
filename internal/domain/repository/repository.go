@@ -2,6 +2,8 @@ package repository
 
 import (
 	"context"
+	"strconv"
+	"strings"
 
 	validator "github.com/go-playground/validator/v10"
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal/domain/repository/schema"
@@ -44,28 +46,49 @@ func (r *Repository) GetCrafts(name string) ([]*schema.Craft, error) {
 	return crafts, nil
 }
 
-func (r *Repository) GetMaterials(craftId string) ([]*schema.Material, error) {
+func (r *Repository) GetParentItems(recipeId string) ([]*schema.ParentItem, error) {
 	ctx := context.Background()
-	var materials []*schema.Material
+	var materials []*schema.ParentItem
 
 	query := `
 		SELECT
-			m.tree_id,
-			m.parent_item_id,
-			m.parent_item_name,
-			r.level as parent_craft_level,
-			r.job as parent_craft_job,
-			m.child_item_id,
-			m.child_item_name,
-			m.child_item_type,
-			m.unit,
-			m.total
-		FROM get_materials($1) m
-		JOIN recipes r
-		ON m.recipe_id = r.id
+			distinct parent_item_id
+		FROM get_materials($1)
 	`
 
-	err := r.postgresql.SelectContext(ctx, &materials, query, craftId)
+	err := r.postgresql.SelectContext(ctx, &materials, query, recipeId)
+	if err != nil {
+		return nil, err
+	}
+
+	return materials, nil
+}
+
+func (r *Repository) GetMaterials(itemIds []string) ([]*schema.Material, error) {
+	ctx := context.Background()
+	var materials []*schema.Material
+
+	// Prepare placeholders for the IN clause
+	placeholders := make([]string, len(itemIds))
+	args := make([]interface{}, len(itemIds))
+	for i, id := range itemIds {
+		placeholders[i] = "$" + strconv.Itoa(i+1)
+		args[i] = id
+	}
+
+	query := `
+		SELECT
+			it.id,
+			it.recipe_id,
+			it.parent_item_id,
+			it.child_item_id,
+			it.quantity,
+			it.type
+		FROM item_tree it
+		WHERE it.parent_item_id IN (` + strings.Join(placeholders, ", ") + `)
+	`
+
+	err := r.postgresql.SelectContext(ctx, &materials, query, args...)
 	if err != nil {
 		return nil, err
 	}

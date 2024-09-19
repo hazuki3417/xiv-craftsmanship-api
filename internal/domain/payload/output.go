@@ -13,24 +13,16 @@ type Craft struct {
 	Pieces int
 	Level  Level
 }
-
-type Parent struct {
-	ItemId     string
-	ItemName   string
-	CraftJob   string
-	CraftLevel int
-}
-
-type Child struct {
-	ItemId    string
-	ItemName  string
-	ItemType  string
-	ItemUnit  int
-	ItemTotal int
+type Recipe struct {
+	RecipeID  string
+	ItemID    string
+	Materials []Material
 }
 
 type Material struct {
-	TreeId string
-	Parent Parent
-	Child  Child
+	recipeId string
+	ItemID   string
+	Quantity int
+	Type     string
+	Recipes  []Recipe
 }

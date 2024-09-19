@@ -37,31 +37,31 @@ func (r *queryResolver) Crafts(ctx context.Context, name string) ([]*model.Craft
 
 // Materials is the resolver for the materials field.
 func (r *queryResolver) Materials(ctx context.Context, craftID string) ([]*model.Material, error) {
-	materials, err := r.domain.Domain.UseCase.GetMaterials(craftID)
+	// materials, err := r.domain.Domain.UseCase.GetMaterials(craftID)
 
-	if err != nil {
-		return nil, err
-	}
+	// if err != nil {
+	// 	return nil, err
+	// }
 
 	result := []*model.Material{}
-	for _, material := range materials {
-		result = append(result, &model.Material{
-			TreeID: material.TreeId,
-			Parent: &model.Parent{
-				ItemID:     material.Parent.ItemId,
-				ItemName:   material.Parent.ItemName,
-				CraftJob:   material.Parent.CraftJob,
-				CraftLevel: material.Parent.CraftLevel,
-			},
-			Child: &model.Child{
-				ItemID:    material.Child.ItemId,
-				ItemName:  material.Child.ItemName,
-				ItemUnit:  material.Child.ItemUnit,
-				ItemTotal: material.Child.ItemTotal,
-				ItemType:  material.Child.ItemType,
-			},
-		})
-	}
+	// for _, material := range materials {
+	// 	result = append(result, &model.Material{
+	// 		TreeID: material.TreeId,
+	// 		Parent: &model.Parent{
+	// 			ItemID:     material.Parent.ItemId,
+	// 			ItemName:   material.Parent.ItemName,
+	// 			CraftJob:   material.Parent.CraftJob,
+	// 			CraftLevel: material.Parent.CraftLevel,
+	// 		},
+	// 		Child: &model.Child{
+	// 			ItemID:    material.Child.ItemId,
+	// 			ItemName:  material.Child.ItemName,
+	// 			ItemUnit:  material.Child.ItemUnit,
+	// 			ItemTotal: material.Child.ItemTotal,
+	// 			ItemType:  material.Child.ItemType,
+	// 		},
+	// 	})
+	// }
 
 	return result, nil
 }

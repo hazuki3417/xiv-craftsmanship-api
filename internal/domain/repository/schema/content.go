@@ -10,15 +10,15 @@ type Craft struct {
 	RecipeLevel int    `db:"recipe_level"`
 }
 
+type ParentItem struct {
+	Id string `db:"parent_item_id"`
+}
+
 type Material struct {
-	TreeId           string `db:"tree_id"`
-	ParentItemId     string `db:"parent_item_id"`
-	ParentItemName   string `db:"parent_item_name"`
-	ParentCraftLevel int    `db:"parent_craft_level"`
-	ParentCraftJob   string `db:"parent_craft_job"`
-	ChildItemId      string `db:"child_item_id"`
-	ChildItemName    string `db:"child_item_name"`
-	ChildItemType    string `db:"child_item_type"`
-	Unit             int    `db:"unit"`
-	Total            int    `db:"total"`
+	Id           string `db:"id"`
+	RecipeId     string `db:"recipe_id"`
+	ParentItemId string `db:"parent_item_id"`
+	ChildItemId  string `db:"child_item_id"`
+	Quantity     int    `db:"quantity"`
+	Type         string `db:"type"`
 }
