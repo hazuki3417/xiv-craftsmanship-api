@@ -186,8 +186,6 @@ components:
       type: object
       additionalProperties: false
       properties:
-        recipeId:
-          $ref: '#/components/schemas/RecipeId'
         itemId:
           $ref: '#/components/schemas/ItemId'
         quantity:
@@ -207,7 +205,6 @@ components:
           items:
             $ref: '#/components/schemas/Recipe'
       required:
-        - recipeId
         - itemId
         - quantity
         - type

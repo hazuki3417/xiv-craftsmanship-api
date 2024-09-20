@@ -20,8 +20,6 @@ import (
 
 type Material struct {
 
-	RecipeId string `json:"recipeId" validate:"regexp=^[0-9a-z]{11}"`
-
 	ItemId string `json:"itemId" validate:"regexp=^[0-9a-z]{11}"`
 
 	Quantity int32 `json:"quantity"`
@@ -34,7 +32,6 @@ type Material struct {
 // AssertMaterialRequired checks if the required fields are not zero-ed
 func AssertMaterialRequired(obj Material) error {
 	elements := map[string]interface{}{
-		"recipeId": obj.RecipeId,
 		"itemId": obj.ItemId,
 		"quantity": obj.Quantity,
 		"type": obj.Type,

@@ -80,7 +80,7 @@ func (u *UseCase) GetMaterials(recipeId string) (*payload.Material, error) {
 		}
 
 		recipeMap[material.ParentItemId][material.RecipeId] = append(recipeMap[material.ParentItemId][material.RecipeId], payload.Material{
-			ItemID:   material.ChildItemId,
+			ItemId:   material.ChildItemId,
 			Quantity: material.Quantity,
 			Type:     material.Type,
 			Recipes:  []payload.Recipe{},
@@ -94,7 +94,7 @@ func (u *UseCase) GetMaterials(recipeId string) (*payload.Material, error) {
 
 func createTree(itemID string, recipeMap map[string]map[string][]payload.Material) payload.Material {
 	node := payload.Material{
-		ItemID:   itemID,
+		ItemId:   itemID,
 		Quantity: 1,
 		Type:     "material",
 		Recipes:  []payload.Recipe{},
@@ -104,13 +104,13 @@ func createTree(itemID string, recipeMap map[string]map[string][]payload.Materia
 	if recipes, exists := recipeMap[itemID]; exists {
 		for recipeID, materials := range recipes {
 			recipe := payload.Recipe{
-				RecipeID:  recipeID,
-				ItemID:    itemID,
+				RecipeId:  recipeID,
+				ItemId:    itemID,
 				Materials: []payload.Material{},
 			}
 			for _, material := range materials {
 				// 再帰的に子ノードを作成
-				childNode := createTree(material.ItemID, recipeMap)
+				childNode := createTree(material.ItemId, recipeMap)
 				material.Recipes = childNode.Recipes
 				recipe.Materials = append(recipe.Materials, material)
 			}

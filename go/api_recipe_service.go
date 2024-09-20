@@ -6,6 +6,7 @@ import (
 	"net/http"
 
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal"
+	"github.com/hazuki3417/xiv-craftsmanship-api/internal/domain/payload"
 )
 
 type RecipeAPIService struct {
@@ -17,17 +18,45 @@ func NewRecipeAPIService(service *internal.Domain) *RecipeAPIService {
 }
 
 func (s *RecipeAPIService) GetRecipe(ctx context.Context, recipeId string, body map[string]interface{}) (ImplResponse, error) {
-	// TODO - update GetRecipe with the required logic for this service method.
-	// Add api_recipe_service.go to the .openapi-generator-ignore to avoid overwriting this service implementation when updating open api generation.
+	materials, err := s.service.Domain.UseCase.GetMaterials(recipeId)
+	if materials == nil || len(materials.Recipes) == 0 {
+		return Response(http.StatusNotFound, nil), errors.New("recipe not found")
+	}
 
-	// TODO: Uncomment the next line to return response Response(200, Material{}) or use other options such as http.Ok ...
-	// return Response(200, Material{}), nil
+	if err != nil {
+		return Response(http.StatusInternalServerError, nil), err
+	}
 
-	// TODO: Uncomment the next line to return response Response(400, {}) or use other options such as http.Ok ...
-	// return Response(400, nil),nil
+	tree := mapMaterialStruct(materials)
 
-	// TODO: Uncomment the next line to return response Response(404, {}) or use other options such as http.Ok ...
-	// return Response(404, nil),nil
+	return Response(200, tree), nil
+}
 
-	return Response(http.StatusNotImplemented, nil), errors.New("GetRecipe method not implemented")
+func mapMaterialStruct(source *payload.Material) *Material {
+	recipes := []Recipe{}
+
+	for _, recipe := range source.Recipes {
+		recipes = append(recipes, *mapRecipeStruct(&recipe))
+	}
+
+	return &Material{
+		ItemId:   source.ItemId,
+		Quantity: int32(source.Quantity),
+		Type:     ItemType(source.Type),
+		Recipes:  recipes,
+	}
+}
+
+func mapRecipeStruct(source *payload.Recipe) *Recipe {
+	// 元データの構造体を変換後の構造体にマッピング
+	materials := []Material{}
+	for _, material := range source.Materials {
+		materials = append(materials, *mapMaterialStruct(&material))
+	}
+
+	return &Recipe{
+		RecipeId:  source.RecipeId,
+		ItemId:    source.ItemId,
+		Materials: materials,
+	}
 }

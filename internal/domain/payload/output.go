@@ -10,14 +10,13 @@ type Craft struct {
 	CraftLevel int
 }
 type Recipe struct {
-	RecipeID  string
-	ItemID    string
+	RecipeId  string
+	ItemId    string
 	Materials []Material
 }
 
 type Material struct {
-	RecipeId string
-	ItemID   string
+	ItemId   string
 	Quantity int
 	Type     string
 	Recipes  []Recipe
