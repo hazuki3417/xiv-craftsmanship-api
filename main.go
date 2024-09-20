@@ -19,7 +19,7 @@ func main() {
 	)
 
 	// NOTE: 手動で追加すること
-	CraftAPIService := openapi.NewCraftAPIService(*domain)
+	CraftAPIService := openapi.NewCraftAPIService(domain)
 	CraftAPIController := openapi.NewCraftAPIController(CraftAPIService)
 
 	router := openapi.NewRouter(CraftAPIController)
