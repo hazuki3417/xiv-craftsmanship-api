@@ -24,5 +24,5 @@ func main() {
 
 	router := openapi.NewRouter(CraftAPIController)
 
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":"+container.Env.Port, router))
 }
