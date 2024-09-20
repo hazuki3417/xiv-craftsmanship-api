@@ -20,4 +20,6 @@ gen:
 		generate \
 			-i /local/src/openapi/reference/root.yaml \
 			-g go-server \
-			-o /local/src
+			-o /local/src/ \
+			--git-user-id hazuki3417 \
+			--git-repo-id xiv-craftsmanship-api \

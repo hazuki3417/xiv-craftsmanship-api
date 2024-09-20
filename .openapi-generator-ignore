@@ -28,3 +28,4 @@ go.sum
 Dockerfile
 .openapi-generator
 api
+api_*.go

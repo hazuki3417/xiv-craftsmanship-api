@@ -1,0 +1,121 @@
+openapi: 3.0.2
+servers:
+  - url: 'http://localhost:8080'
+    description: localhost
+info:
+  description: xiv-craftsmanship-api
+  version: 1.0.0
+  title: xiv-craftsmanship-api
+  termsOfService: 'https://github.com/hazuki3417/xiv-craftsmanship-api'
+  contact:
+    url: 'https://github.com/hazuki3417/xiv-craftsmanship-web'
+    email: hazuki3417@gmail.com
+    name: hazuki3417
+  license:
+    name: MIT
+    url: 'https://github.com/hazuki3417/xiv-craftsmanship-db'
+paths:
+  /craft:
+    get:
+      summary: craft
+      tags:
+        - craft
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Craft'
+        '400':
+          description: Bad Request
+      operationId: get-craft
+      parameters:
+        - schema:
+            type: string
+          in: query
+          name: name
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+      description: craft
+    parameters: []
+externalDocs:
+  description: Find out more about Swagger
+  url: 'http://swagger.io'
+components:
+  schemas:
+    Craft:
+      title: Craft
+      x-stoplight:
+        id: kv5zpkg88x0ax
+      type: object
+      x-tags:
+        - craft
+      properties:
+        recipeId:
+          $ref: '#/components/schemas/RecipeId'
+        itemId:
+          $ref: '#/components/schemas/ItemId'
+        name:
+          type: string
+          x-stoplight:
+            id: hsckae7mm9j1m
+        pieces:
+          type: integer
+          x-stoplight:
+            id: kuy3sy67nju5e
+          minimum: 1
+          maximum: 999
+        job:
+          type: string
+          x-stoplight:
+            id: j91gqw1bgusp6
+        itemLevel:
+          type: integer
+          x-stoplight:
+            id: cmtv40zaoqy3c
+          format: int32
+          minimum: 1
+          maximum: 999
+          readOnly: true
+        craftLevel:
+          type: integer
+          x-stoplight:
+            id: 7t9io51fndra8
+          minimum: 1
+          format: int32
+          maximum: 999
+          nullable: true
+          readOnly: true
+      required:
+        - recipeId
+        - itemId
+        - name
+        - pieces
+        - job
+        - itemLevel
+        - craftLevel
+    RecipeId:
+      title: RecipeId
+      x-stoplight:
+        id: 5lxsqfx98357g
+      type: string
+      pattern: '^[0-9a-z]{11}'
+    ItemId:
+      title: ItemId
+      x-stoplight:
+        id: cv35svuwmrclk
+      type: string
+      pattern: '^[0-9a-z]{11}'
+  requestBodies: {}
+  securitySchemes: {}
+tags:
+  - name: craft
+  - name: recipe
