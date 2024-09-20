@@ -30,4 +30,5 @@ Dockerfile
 api
 go/api_craft*.go
 go/api_health*.go
+go/api_recipe*.go
 main.go

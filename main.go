@@ -22,6 +22,7 @@ func main() {
 	router := openapi.NewRouter(
 		openapi.NewHealthAPIController(openapi.NewHealthAPIService()),
 		openapi.NewCraftAPIController(openapi.NewCraftAPIService(domain)),
+		openapi.NewRecipeAPIController(openapi.NewRecipeAPIService(domain)),
 	)
 
 	log.Fatal(http.ListenAndServe(":"+container.Env.Port, router))
