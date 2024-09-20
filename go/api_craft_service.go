@@ -24,12 +24,12 @@ func (s *CraftAPIService) GetCraft(ctx context.Context, name string, body map[st
 	result := []Craft{}
 	for _, craft := range crafts {
 		result = append(result, Craft{
-			RecipeId:   craft.Id,
+			RecipeId:   craft.RecipeId,
 			ItemId:     craft.ItemId,
 			Name:       craft.Name,
 			Pieces:     1,
 			Job:        craft.Job,
-			ItemLevel:  int32(*craft.Level.Item),
+			ItemLevel:  int32(craft.ItemLevel),
 			CraftLevel: nil,
 		})
 	}

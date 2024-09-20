@@ -32,15 +32,13 @@ func (u *UseCase) GetCrafts(name string) ([]*payload.Craft, error) {
 	var result []*payload.Craft
 	for _, craft := range crafts {
 		result = append(result, &payload.Craft{
-			Id:     craft.Id,
-			ItemId: craft.ItemId,
-			Name:   craft.Name,
-			Job:    craft.Job,
-			Pieces: craft.Pieces,
-			Level: payload.Level{
-				Item:  craft.ItemLevel,
-				Craft: craft.RecipeLevel,
-			},
+			RecipeId:   craft.Id,
+			ItemId:     craft.ItemId,
+			Name:       craft.Name,
+			Job:        craft.Job,
+			Pieces:     craft.Pieces,
+			ItemLevel:  *craft.ItemLevel,
+			CraftLevel: craft.RecipeLevel,
 		})
 	}
 
