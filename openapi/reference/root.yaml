@@ -62,6 +62,36 @@ paths:
             schema:
               type: object
               properties: {}
+  '/recipe/{recipeId}':
+    get:
+      summary: recipe
+      tags:
+        - recipe
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Material'
+        '400':
+          description: Bad Request
+        '404':
+          description: Not Found
+      operationId: get-recipe
+      description: recipe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
+    parameters:
+      - schema:
+          type: string
+        name: recipeId
+        in: path
+        required: true
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
@@ -72,8 +102,7 @@ components:
       x-stoplight:
         id: kv5zpkg88x0ax
       type: object
-      x-tags:
-        - craft
+      additionalProperties: false
       properties:
         recipeId:
           $ref: '#/components/schemas/RecipeId'
@@ -97,7 +126,6 @@ components:
           type: integer
           x-stoplight:
             id: cmtv40zaoqy3c
-          format: int32
           minimum: 1
           maximum: 999
           readOnly: true
@@ -106,7 +134,6 @@ components:
           x-stoplight:
             id: 7t9io51fndra8
           minimum: 1
-          format: int32
           maximum: 999
           nullable: true
           readOnly: true
@@ -130,8 +157,73 @@ components:
         id: cv35svuwmrclk
       type: string
       pattern: '^[0-9a-z]{11}'
+    Recipe:
+      title: Recipe
+      x-stoplight:
+        id: cqocrs77ylh56
+      type: object
+      additionalProperties: false
+      properties:
+        recipeId:
+          $ref: '#/components/schemas/RecipeId'
+        itemId:
+          $ref: '#/components/schemas/ItemId'
+        materials:
+          type: array
+          x-stoplight:
+            id: rvvoppqcifnuw
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Material'
+      required:
+        - recipeId
+        - itemId
+        - materials
+    Material:
+      title: Material
+      x-stoplight:
+        id: 8b9jqdh25vrsb
+      type: object
+      additionalProperties: false
+      properties:
+        recipeId:
+          $ref: '#/components/schemas/RecipeId'
+        itemId:
+          $ref: '#/components/schemas/ItemId'
+        quantity:
+          type: integer
+          x-stoplight:
+            id: zl5r7dvsm0ip2
+          default: 1
+          minimum: 1
+          maximum: 999
+        type:
+          $ref: '#/components/schemas/ItemType'
+        recipes:
+          x-stoplight:
+            id: 4jvv6s358u30a
+          type: array
+          uniqueItems: true
+          items:
+            $ref: '#/components/schemas/Recipe'
+      required:
+        - recipeId
+        - itemId
+        - quantity
+        - type
+        - recipes
+    ItemType:
+      title: ItemType
+      x-stoplight:
+        id: zn5crzyo5c0sf
+      type: string
+      enum:
+        - material
+        - crystal
+      description: ''
   requestBodies: {}
   securitySchemes: {}
+  parameters: {}
 tags:
   - name: craft
   - name: health
