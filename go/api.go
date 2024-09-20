@@ -24,6 +24,12 @@ import (
 type CraftAPIRouter interface { 
 	GetCraft(http.ResponseWriter, *http.Request)
 }
+// HealthAPIRouter defines the required methods for binding the api requests to a responses for the HealthAPI
+// The HealthAPIRouter implementation should parse necessary information from the http request,
+// pass the data to a HealthAPIServicer to perform the required actions, then write the service results to the http response.
+type HealthAPIRouter interface { 
+	GetHealth(http.ResponseWriter, *http.Request)
+}
 
 
 // CraftAPIServicer defines the api actions for the CraftAPI service
@@ -32,4 +38,13 @@ type CraftAPIRouter interface {
 // and updated with the logic required for the API.
 type CraftAPIServicer interface { 
 	GetCraft(context.Context, string, map[string]interface{}) (ImplResponse, error)
+}
+
+
+// HealthAPIServicer defines the api actions for the HealthAPI service
+// This interface intended to stay up to date with the openapi yaml used to generate it,
+// while the service implementation can be ignored with the .openapi-generator-ignore file
+// and updated with the logic required for the API.
+type HealthAPIServicer interface { 
+	GetHealth(context.Context, map[string]interface{}) (ImplResponse, error)
 }

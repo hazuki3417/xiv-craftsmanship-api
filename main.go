@@ -19,10 +19,10 @@ func main() {
 	)
 
 	// NOTE: 手動で追加すること
-	CraftAPIService := openapi.NewCraftAPIService(domain)
-	CraftAPIController := openapi.NewCraftAPIController(CraftAPIService)
-
-	router := openapi.NewRouter(CraftAPIController)
+	router := openapi.NewRouter(
+		openapi.NewHealthAPIController(openapi.NewHealthAPIService()),
+		openapi.NewCraftAPIController(openapi.NewCraftAPIService(domain)),
+	)
 
 	log.Fatal(http.ListenAndServe(":"+container.Env.Port, router))
 }

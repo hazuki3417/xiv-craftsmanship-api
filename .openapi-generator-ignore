@@ -28,5 +28,6 @@ go.sum
 Dockerfile
 .openapi-generator
 api
-go/api_*.go
+go/api_craft*.go
+go/api_health*.go
 main.go

@@ -46,6 +46,22 @@ paths:
               properties: {}
       description: craft
     parameters: []
+  /health:
+    get:
+      summary: health
+      tags:
+        - health
+      responses:
+        '200':
+          description: OK
+      operationId: get-health
+      description: health
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties: {}
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
@@ -118,4 +134,5 @@ components:
   securitySchemes: {}
 tags:
   - name: craft
+  - name: health
   - name: recipe

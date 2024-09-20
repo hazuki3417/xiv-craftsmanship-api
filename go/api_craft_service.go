@@ -8,10 +8,10 @@ import (
 )
 
 type CraftAPIService struct {
-	service internal.Domain
+	service *internal.Domain
 }
 
-func NewCraftAPIService(service internal.Domain) *CraftAPIService {
+func NewCraftAPIService(service *internal.Domain) *CraftAPIService {
 	return &CraftAPIService{service}
 }
 
