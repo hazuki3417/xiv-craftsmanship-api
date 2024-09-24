@@ -84,7 +84,7 @@ paths:
           description: OK
           headers: {}
           content:
-            application/yaml:
+            application/x-yaml:
               schema:
                 type: object
                 properties: {}
