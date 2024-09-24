@@ -12,9 +12,6 @@
 package openapi
 
 import (
-	"errors"
-	"io"
-	"encoding/json"
 	"net/http"
 	"strings"
 )
@@ -76,14 +73,7 @@ func (c *CraftAPIController) GetCraft(w http.ResponseWriter, r *http.Request) {
 		c.errorHandler(w, r, &RequiredError{Field: "name"}, nil)
 		return
 	}
-	bodyParam := map[string]interface{}{}
-	d := json.NewDecoder(r.Body)
-	d.DisallowUnknownFields()
-	if err := d.Decode(&bodyParam); err != nil && !errors.Is(err, io.EOF) {
-		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
-		return
-	}
-	result, err := c.service.GetCraft(r.Context(), nameParam, bodyParam)
+	result, err := c.service.GetCraft(r.Context(), nameParam)
 	// If an error occurred, encode the error with the status code
 	if err != nil {
 		c.errorHandler(w, r, err, &result)

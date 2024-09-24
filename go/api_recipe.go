@@ -12,9 +12,6 @@
 package openapi
 
 import (
-	"errors"
-	"io"
-	"encoding/json"
 	"net/http"
 	"strings"
 
@@ -70,14 +67,7 @@ func (c *RecipeAPIController) GetRecipe(w http.ResponseWriter, r *http.Request) 
 		c.errorHandler(w, r, &RequiredError{"recipeId"}, nil)
 		return
 	}
-	bodyParam := map[string]interface{}{}
-	d := json.NewDecoder(r.Body)
-	d.DisallowUnknownFields()
-	if err := d.Decode(&bodyParam); err != nil && !errors.Is(err, io.EOF) {
-		c.errorHandler(w, r, &ParsingError{Err: err}, nil)
-		return
-	}
-	result, err := c.service.GetRecipe(r.Context(), recipeIdParam, bodyParam)
+	result, err := c.service.GetRecipe(r.Context(), recipeIdParam)
 	// If an error occurred, encode the error with the status code
 	if err != nil {
 		c.errorHandler(w, r, err, &result)

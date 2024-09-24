@@ -15,7 +15,7 @@ func NewCraftAPIService(service *internal.Domain) *CraftAPIService {
 	return &CraftAPIService{service}
 }
 
-func (s *CraftAPIService) GetCraft(ctx context.Context, name string, body map[string]interface{}) (ImplResponse, error) {
+func (s *CraftAPIService) GetCraft(ctx context.Context, name string) (ImplResponse, error) {
 	crafts, err := s.service.Domain.UseCase.GetCrafts(name)
 	if err != nil {
 		return Response(http.StatusInternalServerError, nil), err

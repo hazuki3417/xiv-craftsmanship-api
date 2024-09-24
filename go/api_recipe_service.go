@@ -17,7 +17,7 @@ func NewRecipeAPIService(service *internal.Domain) *RecipeAPIService {
 	return &RecipeAPIService{service}
 }
 
-func (s *RecipeAPIService) GetRecipe(ctx context.Context, recipeId string, body map[string]interface{}) (ImplResponse, error) {
+func (s *RecipeAPIService) GetRecipe(ctx context.Context, recipeId string) (ImplResponse, error) {
 	materials, err := s.service.Domain.UseCase.GetMaterials(recipeId)
 	if materials == nil || len(materials.Recipes) == 0 {
 		return Response(http.StatusNotFound, nil), errors.New("recipe not found")
