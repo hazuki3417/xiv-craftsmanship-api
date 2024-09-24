@@ -27,7 +27,7 @@ func main() {
 
 	// NOTE: サービスとは別に必要なエンドポイントは個別に追加
 	router.HandleFunc("/health", handlefunc.GetHealth)
-	router.HandleFunc("/openapi", handlefunc.GetOpenApi)
+	router.HandleFunc("/openapi.yaml", handlefunc.GetOpenApi)
 
 	log.Fatal(http.ListenAndServe(":"+container.Env.Port, router))
 }
