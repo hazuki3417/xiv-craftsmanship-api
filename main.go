@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	openapi "github.com/hazuki3417/xiv-craftsmanship-api/go"
+	"github.com/hazuki3417/xiv-craftsmanship-api/handlefunc"
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal"
 )
 
@@ -20,10 +21,13 @@ func main() {
 
 	// NOTE: 手動で追加すること
 	router := openapi.NewRouter(
-		openapi.NewDevelopAPIController(openapi.NewDevelopAPIService()),
 		openapi.NewCraftAPIController(openapi.NewCraftAPIService(domain)),
 		openapi.NewRecipeAPIController(openapi.NewRecipeAPIService(domain)),
 	)
+
+	// NOTE: サービスとは別に必要なエンドポイントは個別に追加
+	router.HandleFunc("/health", handlefunc.GetHealth)
+	router.HandleFunc("/openapi", handlefunc.GetOpenApi)
 
 	log.Fatal(http.ListenAndServe(":"+container.Env.Port, router))
 }

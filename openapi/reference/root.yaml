@@ -40,16 +40,6 @@ paths:
           required: true
       description: craft
     parameters: []
-  /health:
-    get:
-      summary: health
-      responses:
-        '200':
-          description: OK
-      operationId: get-health
-      description: health
-      tags:
-        - develop
   '/recipe/{recipeId}':
     get:
       summary: recipe
@@ -74,22 +64,6 @@ paths:
         name: recipeId
         in: path
         required: true
-  /openapi:
-    get:
-      summary: openapi
-      tags:
-        - develop
-      responses:
-        '200':
-          description: OK
-          headers: {}
-          content:
-            application/x-yaml:
-              schema:
-                type: object
-                properties: {}
-      operationId: get-openapi
-      description: openapi
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
@@ -221,5 +195,4 @@ components:
   parameters: {}
 tags:
   - name: craft
-  - name: develop
   - name: recipe
