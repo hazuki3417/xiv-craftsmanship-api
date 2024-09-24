@@ -38,30 +38,18 @@ paths:
           in: query
           name: name
           required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties: {}
       description: craft
     parameters: []
   /health:
     get:
       summary: health
-      tags:
-        - health
       responses:
         '200':
           description: OK
       operationId: get-health
       description: health
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties: {}
+      tags:
+        - develop
   '/recipe/{recipeId}':
     get:
       summary: recipe
@@ -80,18 +68,28 @@ paths:
           description: Not Found
       operationId: get-recipe
       description: recipe
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties: {}
     parameters:
       - schema:
           type: string
         name: recipeId
         in: path
         required: true
+  /openapi:
+    get:
+      summary: openapi
+      tags:
+        - develop
+      responses:
+        '200':
+          description: OK
+          headers: {}
+          content:
+            application/yaml:
+              schema:
+                type: object
+                properties: {}
+      operationId: get-openapi
+      description: openapi
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
@@ -223,5 +221,5 @@ components:
   parameters: {}
 tags:
   - name: craft
-  - name: health
+  - name: develop
   - name: recipe
