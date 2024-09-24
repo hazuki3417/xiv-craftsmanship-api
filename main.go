@@ -20,7 +20,7 @@ func main() {
 
 	// NOTE: 手動で追加すること
 	router := openapi.NewRouter(
-		openapi.NewHealthAPIController(openapi.NewHealthAPIService()),
+		openapi.NewDevelopAPIController(openapi.NewDevelopAPIService()),
 		openapi.NewCraftAPIController(openapi.NewCraftAPIService(domain)),
 		openapi.NewRecipeAPIController(openapi.NewRecipeAPIService(domain)),
 	)

@@ -24,11 +24,12 @@ import (
 type CraftAPIRouter interface { 
 	GetCraft(http.ResponseWriter, *http.Request)
 }
-// HealthAPIRouter defines the required methods for binding the api requests to a responses for the HealthAPI
-// The HealthAPIRouter implementation should parse necessary information from the http request,
-// pass the data to a HealthAPIServicer to perform the required actions, then write the service results to the http response.
-type HealthAPIRouter interface { 
+// DevelopAPIRouter defines the required methods for binding the api requests to a responses for the DevelopAPI
+// The DevelopAPIRouter implementation should parse necessary information from the http request,
+// pass the data to a DevelopAPIServicer to perform the required actions, then write the service results to the http response.
+type DevelopAPIRouter interface { 
 	GetHealth(http.ResponseWriter, *http.Request)
+	GetOpenapi(http.ResponseWriter, *http.Request)
 }
 // RecipeAPIRouter defines the required methods for binding the api requests to a responses for the RecipeAPI
 // The RecipeAPIRouter implementation should parse necessary information from the http request,
@@ -43,16 +44,17 @@ type RecipeAPIRouter interface {
 // while the service implementation can be ignored with the .openapi-generator-ignore file
 // and updated with the logic required for the API.
 type CraftAPIServicer interface { 
-	GetCraft(context.Context, string, map[string]interface{}) (ImplResponse, error)
+	GetCraft(context.Context, string) (ImplResponse, error)
 }
 
 
-// HealthAPIServicer defines the api actions for the HealthAPI service
+// DevelopAPIServicer defines the api actions for the DevelopAPI service
 // This interface intended to stay up to date with the openapi yaml used to generate it,
 // while the service implementation can be ignored with the .openapi-generator-ignore file
 // and updated with the logic required for the API.
-type HealthAPIServicer interface { 
-	GetHealth(context.Context, map[string]interface{}) (ImplResponse, error)
+type DevelopAPIServicer interface { 
+	GetHealth(context.Context) (ImplResponse, error)
+	GetOpenapi(context.Context) (ImplResponse, error)
 }
 
 
@@ -61,5 +63,5 @@ type HealthAPIServicer interface {
 // while the service implementation can be ignored with the .openapi-generator-ignore file
 // and updated with the logic required for the API.
 type RecipeAPIServicer interface { 
-	GetRecipe(context.Context, string, map[string]interface{}) (ImplResponse, error)
+	GetRecipe(context.Context, string) (ImplResponse, error)
 }
