@@ -18,7 +18,7 @@ func TestGetMaterials(t *testing.T) {
 	repository := repository.New(container.Logger, container.Validator, container.PostgreSQL)
 	usecase := usecase.New(container.Logger, service, repository)
 
-	recipes, err := usecase.GetMaterials("7058bc49df4")
+	recipes, err := usecase.GetRecipe("7058bc49df4")
 	if err != nil {
 		t.Error(err)
 	}

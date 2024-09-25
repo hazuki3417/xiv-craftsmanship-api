@@ -2,7 +2,6 @@ package openapi
 
 import (
 	"context"
-	"errors"
 	"net/http"
 
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal"
@@ -18,16 +17,12 @@ func NewRecipeAPIService(service *internal.Domain) *RecipeAPIService {
 }
 
 func (s *RecipeAPIService) GetRecipe(ctx context.Context, recipeId string) (ImplResponse, error) {
-	materials, err := s.service.Domain.UseCase.GetMaterials(recipeId)
-	if materials == nil || len(materials.Recipes) == 0 {
-		return Response(http.StatusNotFound, nil), errors.New("recipe not found")
-	}
-
+	recipe, err := s.service.Domain.UseCase.GetRecipe(recipeId)
 	if err != nil {
 		return Response(http.StatusInternalServerError, nil), err
 	}
 
-	tree := mapMaterialStruct(materials)
+	tree := mapRecipeStruct(recipe)
 
 	return Response(200, tree), nil
 }
@@ -41,6 +36,7 @@ func mapMaterialStruct(source *payload.Material) *Material {
 
 	return &Material{
 		ItemId:   source.ItemId,
+		ItemName: source.ItemName,
 		Quantity: int32(source.Quantity),
 		Type:     ItemType(source.Type),
 		Recipes:  recipes,
@@ -56,6 +52,7 @@ func mapRecipeStruct(source *payload.Recipe) *Recipe {
 
 	return &Recipe{
 		RecipeId:  source.RecipeId,
+		Pieces:    int32(source.Pieces),
 		ItemId:    source.ItemId,
 		Materials: materials,
 	}

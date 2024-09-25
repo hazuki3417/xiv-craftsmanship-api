@@ -11,14 +11,17 @@ type Craft struct {
 }
 
 type ParentItem struct {
-	Id string `db:"parent_item_id"`
+	Id   string `db:"parent_item_id"`
+	Type string `db:"parent_item_type"`
+	Name string `db:"parent_item_name"`
 }
 
 type Material struct {
-	Id           string `db:"id"`
-	RecipeId     string `db:"recipe_id"`
-	ParentItemId string `db:"parent_item_id"`
-	ChildItemId  string `db:"child_item_id"`
-	Quantity     int    `db:"quantity"`
-	Type         string `db:"type"`
+	Id            string `db:"id"`
+	RecipeId      string `db:"recipe_id"`
+	ParentItemId  string `db:"parent_item_id"`
+	ChildItemId   string `db:"child_item_id"`
+	ChildItemName string `db:"child_item_name"`
+	Quantity      int    `db:"quantity"`
+	Type          string `db:"type"`
 }
