@@ -12,11 +12,17 @@
 package openapi
 
 
+import (
+	"errors"
+)
+
 
 
 type Recipe struct {
 
 	RecipeId string `json:"recipeId" validate:"regexp=^[0-9a-z]{11}"`
+
+	Pieces int32 `json:"pieces"`
 
 	ItemId string `json:"itemId" validate:"regexp=^[0-9a-z]{11}"`
 
@@ -27,6 +33,7 @@ type Recipe struct {
 func AssertRecipeRequired(obj Recipe) error {
 	elements := map[string]interface{}{
 		"recipeId": obj.RecipeId,
+		"pieces": obj.Pieces,
 		"itemId": obj.ItemId,
 		"materials": obj.Materials,
 	}
@@ -46,6 +53,9 @@ func AssertRecipeRequired(obj Recipe) error {
 
 // AssertRecipeConstraints checks if the values respects the defined constraints
 func AssertRecipeConstraints(obj Recipe) error {
+	if obj.Pieces < 1 {
+		return &ParsingError{Param: "Pieces", Err: errors.New(errMsgMinValueConstraint)}
+	}
 	for _, el := range obj.Materials {
 		if err := AssertMaterialConstraints(el); err != nil {
 			return err

@@ -138,6 +138,11 @@ components:
       properties:
         recipeId:
           $ref: '#/components/schemas/RecipeId'
+        pieces:
+          type: integer
+          x-stoplight:
+            id: q2de69wb5kvhs
+          minimum: 1
         itemId:
           $ref: '#/components/schemas/ItemId'
         materials:
@@ -149,6 +154,7 @@ components:
             $ref: '#/components/schemas/Material'
       required:
         - recipeId
+        - pieces
         - itemId
         - materials
     Material:
@@ -160,6 +166,10 @@ components:
       properties:
         itemId:
           $ref: '#/components/schemas/ItemId'
+        itemName:
+          type: string
+          x-stoplight:
+            id: ccmqsj2kfzq5s
         quantity:
           type: integer
           x-stoplight:
@@ -178,6 +188,7 @@ components:
             $ref: '#/components/schemas/Recipe'
       required:
         - itemId
+        - itemName
         - quantity
         - type
         - recipes

@@ -22,6 +22,8 @@ type Material struct {
 
 	ItemId string `json:"itemId" validate:"regexp=^[0-9a-z]{11}"`
 
+	ItemName string `json:"itemName"`
+
 	Quantity int32 `json:"quantity"`
 
 	Type ItemType `json:"type"`
@@ -33,6 +35,7 @@ type Material struct {
 func AssertMaterialRequired(obj Material) error {
 	elements := map[string]interface{}{
 		"itemId": obj.ItemId,
+		"itemName": obj.ItemName,
 		"quantity": obj.Quantity,
 		"type": obj.Type,
 		"recipes": obj.Recipes,
