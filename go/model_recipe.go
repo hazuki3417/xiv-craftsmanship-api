@@ -22,9 +22,11 @@ type Recipe struct {
 
 	RecipeId string `json:"recipeId" validate:"regexp=^[0-9a-z]{11}"`
 
-	Pieces int32 `json:"pieces"`
-
 	ItemId string `json:"itemId" validate:"regexp=^[0-9a-z]{11}"`
+
+	Job string `json:"job"`
+
+	Pieces int32 `json:"pieces"`
 
 	Materials []Material `json:"materials"`
 }
@@ -33,8 +35,9 @@ type Recipe struct {
 func AssertRecipeRequired(obj Recipe) error {
 	elements := map[string]interface{}{
 		"recipeId": obj.RecipeId,
-		"pieces": obj.Pieces,
 		"itemId": obj.ItemId,
+		"job": obj.Job,
+		"pieces": obj.Pieces,
 		"materials": obj.Materials,
 	}
 	for name, el := range elements {

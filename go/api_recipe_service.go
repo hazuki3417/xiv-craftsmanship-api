@@ -52,8 +52,9 @@ func mapRecipeStruct(source *payload.Recipe) *Recipe {
 
 	return &Recipe{
 		RecipeId:  source.RecipeId,
-		Pieces:    int32(source.Pieces),
 		ItemId:    source.ItemId,
+		Job:       source.Job,
+		Pieces:    int32(source.Pieces),
 		Materials: materials,
 	}
 }

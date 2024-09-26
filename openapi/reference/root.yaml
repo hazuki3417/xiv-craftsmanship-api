@@ -51,7 +51,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Material'
+                $ref: '#/components/schemas/Recipe'
         '400':
           description: Bad Request
         '404':
@@ -138,13 +138,17 @@ components:
       properties:
         recipeId:
           $ref: '#/components/schemas/RecipeId'
+        itemId:
+          $ref: '#/components/schemas/ItemId'
+        job:
+          type: string
+          x-stoplight:
+            id: lpu4va78wbbv7
         pieces:
           type: integer
           x-stoplight:
             id: q2de69wb5kvhs
           minimum: 1
-        itemId:
-          $ref: '#/components/schemas/ItemId'
         materials:
           type: array
           x-stoplight:
@@ -154,8 +158,9 @@ components:
             $ref: '#/components/schemas/Material'
       required:
         - recipeId
-        - pieces
         - itemId
+        - job
+        - pieces
         - materials
     Material:
       title: Material
