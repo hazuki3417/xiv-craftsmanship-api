@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"errors"
+	"fmt"
 
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal/domain/payload"
 	"github.com/hazuki3417/xiv-craftsmanship-api/internal/domain/repository"
@@ -107,7 +108,12 @@ func (u *UseCase) GetRecipe(recipeId string) (*payload.Recipe, error) {
 		}
 	}
 
-	tree, err := createTree(rootItemId, itemMap, craftMap)
+	root := payload.Recipe{
+		ItemId:   rootItemId,
+		RecipeId: recipeId,
+	}
+
+	tree, err := createRecipe(root, itemMap, craftMap)
 	if err != nil {
 		return nil, err
 	}
@@ -115,53 +121,70 @@ func (u *UseCase) GetRecipe(recipeId string) (*payload.Recipe, error) {
 	return tree, nil
 }
 
-func createTree(
-	currentItemId string,
+func createRecipe(
+	source payload.Recipe,
 	itemMap map[string]map[string][]payload.Material,
 	craftMap map[string]payload.Craft,
 ) (*payload.Recipe, error) {
 
-	// レシピが存在する場合のみ処理
-	if recipeMap, exists := itemMap[currentItemId]; exists {
+	materials, existsMaterials := itemMap[source.ItemId][source.RecipeId]
+	craft, existsCraft := craftMap[source.RecipeId]
 
-		if len(recipeMap) == 0 {
-			return nil, nil
-		}
-
-		var current *payload.Recipe
-		for recipeId, materials := range recipeMap {
-			var craft *payload.Craft
-			if c, exists := craftMap[recipeId]; !exists {
-				return nil, errors.New("craft data not found")
-			} else {
-				craft = &c
-			}
-
-			current = &payload.Recipe{
-				RecipeId:  craft.RecipeId,
-				Pieces:    craft.Pieces,
-				ItemId:    currentItemId,
-				Materials: []payload.Material{},
-			}
-
-			for i, material := range materials {
-
-				// 再帰的に子ノードを作成
-				tree, err := createTree(material.ItemId, itemMap, craftMap)
-
-				if err != nil {
-					return nil, err
-				}
-
-				if tree == nil {
-					continue
-				}
-				materials[i].Recipes = append(materials[i].Recipes, *tree)
-			}
-			current.Materials = append(current.Materials, materials...)
-		}
-		return current, nil
+	if !existsMaterials {
+		// NOTE: レシピが存在しない場合はスキップ
+		return nil, nil
 	}
 
-	return nil, nil
+	// レシピが存在するときの処理
+	if !existsCraft {
+		return nil, fmt.Errorf("craft data not found for itemId: %s", source.ItemId)
+	}
+
+	source.Pieces = craft.Pieces
+
+	for i := range materials {
+		material, err := createMaterial(materials[i], itemMap, craftMap)
+
+		if err != nil {
+			return nil, err
+		}
+
+		source.Materials = append(source.Materials, *material)
+	}
+	return &source, nil
+}
+
+func createMaterial(
+	source payload.Material,
+	itemMap map[string]map[string][]payload.Material,
+	craftMap map[string]payload.Craft,
+) (*payload.Material, error) {
+	recipes, exists := itemMap[source.ItemId]
+
+	if !exists {
+		return &source, nil
+	}
+
+	if recipes == nil {
+		return nil, errors.New("map data is nil")
+	}
+
+	for recipeId := range recipes {
+		base := payload.Recipe{
+			ItemId:   source.ItemId,
+			RecipeId: recipeId,
+		}
+		recipe, err := createRecipe(base, itemMap, craftMap)
+
+		if err != nil {
+			return nil, err
+		}
+
+		source.Recipes = append(
+			source.Recipes,
+			*recipe,
+		)
+	}
+
+	return &source, nil
 }
