@@ -140,6 +140,7 @@ func createRecipe(
 		return nil, fmt.Errorf("craft data not found for itemId: %s", source.ItemId)
 	}
 
+	source.Job = craft.Job
 	source.Pieces = craft.Pieces
 
 	for i := range materials {

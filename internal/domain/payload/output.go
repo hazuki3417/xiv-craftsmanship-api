@@ -11,8 +11,9 @@ type Craft struct {
 }
 type Recipe struct {
 	RecipeId  string
-	Pieces    int
 	ItemId    string
+	Job       string
+	Pieces    int
 	Materials []Material
 }
 
