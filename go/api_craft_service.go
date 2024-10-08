@@ -27,7 +27,7 @@ func (s *CraftAPIService) GetCraft(ctx context.Context, name string) (ImplRespon
 			RecipeId:   craft.RecipeId,
 			ItemId:     craft.ItemId,
 			Name:       craft.Name,
-			Pieces:     1,
+			Pieces:     int32(craft.Pieces),
 			Job:        craft.Job,
 			ItemLevel:  int32(craft.ItemLevel),
 			CraftLevel: nil,
