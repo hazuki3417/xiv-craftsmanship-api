@@ -34,11 +34,9 @@ func (r *Repository) GetCrafts(name string) ([]*schema.Craft, error) {
 		FROM crafts
 		WHERE name ILIKE $1
 		ORDER BY name
-		LIMIT $2
 	`
 
-	limit := 8
-	err := r.postgresql.SelectContext(ctx, &crafts, query, "%"+name+"%", limit)
+	err := r.postgresql.SelectContext(ctx, &crafts, query, "%"+name+"%")
 	if err != nil {
 		return nil, err
 	}
