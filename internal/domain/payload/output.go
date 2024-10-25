@@ -6,7 +6,7 @@ type Craft struct {
 	Name       string
 	Job        string
 	Pieces     int
-	ItemLevel  int
+	ItemLevel  *int
 	CraftLevel int
 }
 type Recipe struct {

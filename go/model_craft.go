@@ -30,9 +30,9 @@ type Craft struct {
 
 	Job string `json:"job"`
 
-	ItemLevel int32 `json:"itemLevel"`
+	ItemLevel *int32 `json:"itemLevel"`
 
-	CraftLevel *int32 `json:"craftLevel"`
+	CraftLevel int32 `json:"craftLevel"`
 }
 
 // AssertCraftRequired checks if the required fields are not zero-ed
@@ -62,18 +62,6 @@ func AssertCraftConstraints(obj Craft) error {
 	}
 	if obj.Pieces > 999 {
 		return &ParsingError{Param: "Pieces", Err: errors.New(errMsgMaxValueConstraint)}
-	}
-	if obj.ItemLevel < 1 {
-		return &ParsingError{Param: "ItemLevel", Err: errors.New(errMsgMinValueConstraint)}
-	}
-	if obj.ItemLevel > 999 {
-		return &ParsingError{Param: "ItemLevel", Err: errors.New(errMsgMaxValueConstraint)}
-	}
-	if obj.CraftLevel != nil && *obj.CraftLevel < 1 {
-		return &ParsingError{Param: "CraftLevel", Err: errors.New(errMsgMinValueConstraint)}
-	}
-	if obj.CraftLevel != nil && *obj.CraftLevel > 999 {
-		return &ParsingError{Param: "CraftLevel", Err: errors.New(errMsgMaxValueConstraint)}
 	}
 	return nil
 }

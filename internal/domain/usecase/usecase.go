@@ -38,7 +38,7 @@ func (u *UseCase) GetCrafts(name string) ([]*payload.Craft, error) {
 			Name:       craft.Name,
 			Job:        craft.Job,
 			Pieces:     craft.Pieces,
-			ItemLevel:  *craft.ItemLevel,
+			ItemLevel:  craft.ItemLevel,
 			CraftLevel: craft.RecipeLevel,
 		})
 	}

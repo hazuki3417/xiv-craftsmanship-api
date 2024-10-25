@@ -23,15 +23,22 @@ func (s *CraftAPIService) GetCraft(ctx context.Context, name string) (ImplRespon
 
 	result := []Craft{}
 	for _, craft := range crafts {
-		result = append(result, Craft{
+
+		data := Craft{
 			RecipeId:   craft.RecipeId,
 			ItemId:     craft.ItemId,
 			Name:       craft.Name,
 			Pieces:     int32(craft.Pieces),
 			Job:        craft.Job,
-			ItemLevel:  int32(craft.ItemLevel),
-			CraftLevel: nil,
-		})
+			CraftLevel: int32(craft.CraftLevel),
+		}
+
+		if craft.ItemLevel != nil {
+			tmp := int32(*craft.ItemLevel)
+			data.ItemLevel = &tmp
+		}
+
+		result = append(result, data)
 	}
 
 	return Response(http.StatusOK, result), nil
