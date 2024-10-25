@@ -38,6 +38,7 @@ paths:
           in: query
           name: name
           required: true
+          description: 製作アイテム名
       description: craft
     parameters: []
   '/recipe/{recipeId}':
@@ -58,12 +59,14 @@ paths:
           description: Not Found
       operationId: get-recipe
       description: recipe
+      parameters: []
     parameters:
       - schema:
           type: string
         name: recipeId
         in: path
         required: true
+        description: レシピID
 externalDocs:
   description: Find out more about Swagger
   url: 'http://swagger.io'
@@ -75,6 +78,14 @@ components:
         id: kv5zpkg88x0ax
       type: object
       additionalProperties: false
+      required:
+        - recipeId
+        - itemId
+        - name
+        - pieces
+        - job
+        - itemLevel
+        - craftLevel
       properties:
         recipeId:
           $ref: '#/components/schemas/RecipeId'
@@ -98,25 +109,11 @@ components:
           type: integer
           x-stoplight:
             id: cmtv40zaoqy3c
-          minimum: 1
-          maximum: 999
-          readOnly: true
+          nullable: true
         craftLevel:
           type: integer
           x-stoplight:
             id: 7t9io51fndra8
-          minimum: 1
-          maximum: 999
-          nullable: true
-          readOnly: true
-      required:
-        - recipeId
-        - itemId
-        - name
-        - pieces
-        - job
-        - itemLevel
-        - craftLevel
     RecipeId:
       title: RecipeId
       x-stoplight:
@@ -211,4 +208,6 @@ components:
   parameters: {}
 tags:
   - name: craft
+    description: クラフト
   - name: recipe
+    description: レシピ
