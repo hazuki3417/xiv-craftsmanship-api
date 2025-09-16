@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   # xiv-craftsmanship-api:
   #   build:
