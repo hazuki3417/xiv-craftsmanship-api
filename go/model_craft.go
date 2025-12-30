@@ -32,7 +32,7 @@ type Craft struct {
 
 	ItemLevel *int32 `json:"itemLevel"`
 
-	CraftLevel int32 `json:"craftLevel"`
+	CraftLevel *int32 `json:"craftLevel"`
 }
 
 // AssertCraftRequired checks if the required fields are not zero-ed

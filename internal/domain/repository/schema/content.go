@@ -7,7 +7,7 @@ type Craft struct {
 	Pieces      int    `db:"pieces"`
 	Job         string `db:"job"`
 	ItemLevel   *int   `db:"item_level"`
-	RecipeLevel int    `db:"recipe_level"`
+	RecipeLevel *int    `db:"recipe_level"`
 }
 
 type ParentItem struct {

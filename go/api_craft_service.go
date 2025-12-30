@@ -30,12 +30,17 @@ func (s *CraftAPIService) GetCraft(ctx context.Context, name string) (ImplRespon
 			Name:       craft.Name,
 			Pieces:     int32(craft.Pieces),
 			Job:        craft.Job,
-			CraftLevel: int32(craft.CraftLevel),
 		}
 
 		if craft.ItemLevel != nil {
 			tmp := int32(*craft.ItemLevel)
 			data.ItemLevel = &tmp
+		}
+
+
+		if craft.CraftLevel != nil {
+			tmp := int32(*craft.CraftLevel)
+			data.CraftLevel = &tmp
 		}
 
 		result = append(result, data)
